@@ -1,10 +1,12 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Vibration } from "react-native";
 import { useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 const EmergencyScreen = () => {
   const navigation = useNavigation();
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
 
   const handleEmergencyCall = () => {
     Alert.alert("🚨 Экстренный вызов", "Вы уверены, что хотите совершить экстренный вызов?", [
@@ -13,23 +15,54 @@ const EmergencyScreen = () => {
     ]);
   };
 
+  const handleSOSStart = () => {
+    setCountdown(3);
+    let timeLeft = 3;
+    
+    const timer = setInterval(() => {
+      timeLeft -= 1;
+      setCountdown(timeLeft);
+
+      Vibration.vibrate(500); // Вибрация на 0.5 сек
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        handleEmergencyCall();
+      }
+    }, 1000);
+
+    setLongPressTimer(timer);
+  };
+
+  const handleSOSEnd = () => {
+    if (longPressTimer) {
+      clearInterval(longPressTimer);
+      setLongPressTimer(null);
+      setCountdown(null);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Кнопка Назад */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-      {/* Заголовок */}
       <Text style={styles.header}>Экстренный вызов</Text>
 
-      {/* Кнопка вызова */}
-      <TouchableOpacity style={styles.callButton} onPress={handleEmergencyCall}>
-        <Ionicons name="call" size={30} color="#fff" />
-        <Text style={styles.buttonText}>Позвонить 112</Text>
-      </TouchableOpacity>
+      <View style={styles.sosContainer}>
+        <TouchableOpacity
+          style={styles.sosButton}
+          onPressIn={handleSOSStart}
+          onPressOut={handleSOSEnd}
+        >
+          <Text style={styles.sosText}>SOS</Text>
+        </TouchableOpacity>
+        <Text style={[styles.holdText, countdown !== null && { color: "red" }]}>
+          {countdown !== null ? `Осталось: ${countdown} сек` : "Удерживайте 3 секунды для вызова SOS"}
+        </Text>
+      </View>
 
-      {/* Дополнительная информация */}
       <Text style={styles.infoText}>
         В случае опасности не паникуйте. Сообщите оператору точное местоположение и причину вызова.
       </Text>
@@ -47,35 +80,38 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: "absolute",
-    top: 50,
+    top: 54,
     left: 20,
     flexDirection: "row",
     alignItems: "center",
-  },
-  backText: {
-    fontSize: 18,
-    marginLeft: 5,
   },
   header: {
     fontSize: 26,
     fontWeight: "bold",
     marginBottom: 20,
   },
-  callButton: {
-    backgroundColor: "#E53935",
-    padding: 15,
-    borderRadius: 10,
+  sosContainer: {
     alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 20,
-    width: "100%",
+    marginVertical: 20,
   },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 18,
+  sosButton: {
+    width: 150,
+    height: 150,
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
+  },
+  sosText: {
+    color: "#fff",
+    fontSize: 40,
     fontWeight: "bold",
-    marginLeft: 10,
+  },
+  holdText: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#666",
   },
   infoText: {
     fontSize: 16,

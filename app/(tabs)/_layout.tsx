@@ -7,6 +7,7 @@ export default function TabLayout() {
       <Tabs.Screen name="emergency" options={{ title: "Экстренный вызов" }} />
       <Tabs.Screen name="report" options={{ title: "Сообщить о происшествии" }} />
       <Tabs.Screen name="chat" options={{ title: "Чат с оператором" }} />
+      <Tabs.Screen name="news" options={{ title: "Новости" }} />
     </Tabs>
   );
 }

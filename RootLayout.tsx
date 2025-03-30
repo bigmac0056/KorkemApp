@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 import "react-native-reanimated";
 
-// Отключаем автоскрытие сплэш-скрина до загрузки шрифтов
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {

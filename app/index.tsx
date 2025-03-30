@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const HomeScreen = () => {
-  const router = useRouter(); // Используем только expo-router
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -30,22 +30,32 @@ const HomeScreen = () => {
       </View>
 
       {/* Лента новостей */}
-      <ScrollView style={styles.newsFeed} keyboardShouldPersistTaps="handled">
+      <View style={styles.newsFeed}>
         <Text style={styles.newsHeader}>Новости безопасности</Text>
-        <View style={styles.newsItem}>
-          <Text style={styles.newsTitle}>⚠ Внимание! Новые мошеннические схемы</Text>
-          <Text style={styles.newsText}>Будьте осторожны: участились случаи звонков от фальшивых сотрудников банков...</Text>
-        </View>
-        <View style={styles.newsItem}>
-          <Text style={styles.newsTitle}>🚨 Срочное предупреждение</Text>
-          <Text style={styles.newsText}>Сегодня в 17:30 зафиксировано ЧП в районе центра города...</Text>
-        </View>
-      </ScrollView>
+
+        <ScrollView style={styles.newsScroll} showsVerticalScrollIndicator={false}>
+          {[
+            { title: "⚠ Внимание! Новые мошеннические схемы", text: "Будьте осторожны: участились случаи звонков от фальшивых сотрудников банков..." },
+            { title: "🚨 Срочное предупреждение", text: "Сегодня в 17:30 зафиксировано ЧП в районе центра города..." },
+            { title: "🏢 Новый участковый пункт полиции в Астане", text: "В районе Байконыр по ул. Янушкевича, 10 открылся УПП № 20...." },
+          ].map((news, index) => (
+            <View key={index} style={styles.newsItem}>
+              <Text style={styles.newsTitle}>{news.title}</Text>
+              <Text style={styles.newsText}>{news.text}</Text>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* Кнопка "Больше новостей" */}
+        <TouchableOpacity style={styles.moreNewsButton} onPress={() => router.push("/news")}>
+          <Text style={styles.moreNewsText}>Больше новостей</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
-// 🎨 Стили
+// Стили
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -104,6 +114,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  newsScroll: {
+    maxHeight: 500, 
+  },
   newsItem: {
     marginBottom: 10,
     padding: 10,
@@ -117,6 +130,18 @@ const styles = StyleSheet.create({
   newsText: {
     fontSize: 14,
     color: "#444",
+  },
+  moreNewsButton: {
+    backgroundColor: "#1976D2",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  moreNewsText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
