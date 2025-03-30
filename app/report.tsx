@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { 
-  View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Keyboard, TouchableWithoutFeedback 
+  View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Keyboard, 
+  TouchableWithoutFeedback, Image 
 } from "react-native";
 import { useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 const ReportScreen = () => {
   const router = useRouter();
   const [message, setMessage] = useState("");
+  const [media, setMedia] = useState<{ uri: string, type: string } | null>(null);
 
   const handleSendReport = () => {
     if (message.trim().length === 0) {
@@ -15,15 +18,36 @@ const ReportScreen = () => {
       return;
     }
 
-    // Здесь можно добавить логику отправки на сервер или API
-    console.log("Отправлено:", message);
+    console.log("Отправлено:", message, media);
 
-    // Оповещение об отправке
     Alert.alert("Сообщение отправлено", "Ваше сообщение отправлено.");
     
-    // Очистка поля после отправки
+    // Очистка после отправки
     setMessage("");
-    Keyboard.dismiss(); // Закрываем клавиатуру после отправки
+    setMedia(null);
+    Keyboard.dismiss();
+  };
+
+  const pickMedia = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      Alert.alert("Ошибка", "Разрешите доступ к галерее для прикрепления файлов.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const fileSize = result.assets[0].fileSize ?? 0;
+      if (fileSize > 10 * 1024 * 1024) {  
+        Alert.alert("Ошибка", "Файл слишком большой. Максимальный размер — 10 МБ.");
+        return;
+      }
+      setMedia({ uri: result.assets[0].uri, type: result.assets[0].type ?? "Ошибка" });
+    }
   };
 
   return (
@@ -31,7 +55,6 @@ const ReportScreen = () => {
       <View style={styles.container}>
         <Text style={styles.header}>Сообщить о происшествии</Text>
 
-        {/* Поле ввода сообщения */}
         <TextInput
           style={styles.input}
           placeholder="Опишите происшествие..."
@@ -41,13 +64,28 @@ const ReportScreen = () => {
           onChangeText={setMessage}
         />
 
-        {/* Кнопка отправки */}
+        {/* Кнопка прикрепления фото/видео */}
+        <TouchableOpacity style={styles.attachButton} onPress={pickMedia}>
+          <MaterialIcons name="attach-file" size={24} color="#FFF" />
+          <Text style={styles.attachButtonText}>Прикрепить фото/видео</Text>
+        </TouchableOpacity>
+
+        {/* Отображение прикрепленного файла */}
+        {media && (
+          <View style={styles.previewContainer}>
+            {media.type.includes("image") ? (
+              <Image source={{ uri: media.uri }} style={styles.previewImage} />
+            ) : (
+              <Text style={styles.previewText}>Прикреплено видео</Text>
+            )}
+          </View>
+        )}
+
         <TouchableOpacity style={styles.sendButton} onPress={handleSendReport}>
           <MaterialIcons name="send" size={24} color="#FFF" />
           <Text style={styles.sendButtonText}>Отправить</Text>
         </TouchableOpacity>
 
-        {/* Кнопка Назад */}
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <MaterialIcons name="arrow-back" size={24} color="#FFF" />
           <Text style={styles.backButtonText}>Назад</Text>
@@ -83,6 +121,38 @@ const styles = StyleSheet.create({
     borderColor: "#B0B0B0", 
     marginBottom: 20,
     color: "#000", 
+  },
+  attachButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFA500",
+    padding: 12,
+    borderRadius: 8,
+    width: "100%",
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  attachButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    marginLeft: 8,
+    fontWeight: "bold",
+  },
+  previewContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  previewImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    marginTop: 5,
+  },
+  previewText: {
+    color: "#333",
+    fontSize: 16,
+    marginTop: 5,
   },
   sendButton: {
     flexDirection: "row",

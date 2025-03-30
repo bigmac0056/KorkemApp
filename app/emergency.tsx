@@ -23,7 +23,7 @@ const EmergencyScreen = () => {
       timeLeft -= 1;
       setCountdown(timeLeft);
 
-      Vibration.vibrate(500); // Вибрация на 0.5 сек
+      Vibration.vibrate(500); 
 
       if (timeLeft <= 0) {
         clearInterval(timer);

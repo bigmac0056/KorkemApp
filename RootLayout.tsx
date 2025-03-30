@@ -1,12 +1,16 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
-import "react-native-reanimated";
+import { Platform } from "react-native";
+import TabLayout from "@/app/(tabs)/_layout"; 
+import "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
+
+const Stack = createStackNavigator();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -33,9 +37,15 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: Platform.OS === "ios", 
+          ...TransitionPresets.SlideFromRightIOS, 
+        }}
+      >
+        <Stack.Screen name="(tabs)" component={TabLayout} />
+      </Stack.Navigator>
     </ThemeProvider>
   );
 }

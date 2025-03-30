@@ -8,7 +8,6 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Заголовок */}
       <Text style={styles.header}>Безопасность</Text>
 
       {/* Основные кнопки */}
@@ -29,7 +28,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Лента новостей */}
+      {/* Лента */}
       <View style={styles.newsFeed}>
         <Text style={styles.newsHeader}>Новости безопасности</Text>
 
@@ -46,7 +45,7 @@ const HomeScreen = () => {
           ))}
         </ScrollView>
 
-        {/* Кнопка "Больше новостей" */}
+        {/* Кнопка */}
         <TouchableOpacity style={styles.moreNewsButton} onPress={() => router.push("/news")}>
           <Text style={styles.moreNewsText}>Больше новостей</Text>
         </TouchableOpacity>
