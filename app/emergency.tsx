@@ -15,6 +15,11 @@ const EmergencyScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Кнопка Назад */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </TouchableOpacity>
+
       {/* Заголовок */}
       <Text style={styles.header}>Экстренный вызов</Text>
 
@@ -32,7 +37,6 @@ const EmergencyScreen = () => {
   );
 };
 
-// 🎨 Стили
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -40,6 +44,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 50,
     alignItems: "center",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backText: {
+    fontSize: 18,
+    marginLeft: 5,
   },
   header: {
     fontSize: 26,
