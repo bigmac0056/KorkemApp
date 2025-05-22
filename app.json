@@ -1,9 +1,12 @@
 {
   "expo": {
-    "name": "NepitchT",
-    "slug": "NepitchT",
+    "name": "KorkemApp",
+    "slug": "KorkemApp",
     "version": "1.0.0",
     "orientation": "portrait",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -14,7 +17,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.KorkemApp"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +32,9 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-sqlite",
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,0 +1,1846 @@
+[
+    {
+      "id": 1,
+      "phrase": "Абылай аспас асу (сары бел)",
+      "translation": {
+        "ru": "Труднопроходимый перевал",
+        "kk": "Қиын өту",
+        "en": "Impassable mountain pass"
+      }
+    },
+    {
+      "id": 2,
+      "phrase": "Aбылхаят (әбілхаят) суы",
+      "translation": {
+        "ru": "Чудодейственная вода, дающая бессмертие",
+        "kk": "Ғажайып су",
+        "en": "Miraculous water that grants immortality"
+      }
+    },
+    {
+      "id": 3,
+      "phrase": "Абырой болғанда",
+      "translation": {
+        "ru": "К счастью",
+        "kk": "Бақытымызға орай",
+        "en": "Fortunately"
+      }
+    },
+    {
+      "id": 4,
+      "phrase": "Абыройы [айрандай] төгілу",
+      "translation": {
+        "ru": "Опозориться, осрамиться",
+        "kk": "Өзін масқаралау",
+        "en": "To be shamed"
+      }
+    },
+    {
+      "id": 5,
+      "phrase": "Ағама жеңгем, апама жездем сай",
+      "translation": {
+        "ru": "Они стоят друг друга(Два сапога пара)",
+        "kk": "Олар бір-біріне лайықты",
+        "en": "They are a perfect match"
+      }
+    },
+    {
+      "id": 6,
+      "phrase": "Ағат (әбестік) кету / Ағаттық (әбестік) істеу (жасау)",
+      "translation": {
+        "ru": "Поступать необдуманно, сделать неверный шаг",
+        "kk": "Асығыс әрекет ету, қате әрекет жасау",
+        "en": "To act rashly / make a serious mistake"
+      }
+    },
+    {
+      "id": 7,
+      "phrase": "Ағаш атқа мінгізу / Ағаш аттың басына іліп әкету",
+      "translation": {
+        "ru": "Распускать плохие слухи, злословить",
+        "kk": "Жаман өсек тарату, жала жабу",
+        "en": "To gossip or speak ill of someone"
+      }
+    },
+    {
+      "id": 8,
+      "phrase": "Ағаштан түйін (түйме) түйеді",
+      "translation": {
+        "ru": "Мастер на все руки",
+        "kk": "Кез келген іске шебер адам",
+        "en": "A jack of all trades"
+      }
+    },
+    {
+      "id": 9,
+      "phrase": "Ағы - ақ, қызылы - қызыл",
+      "translation": {
+        "ru": "Иметь цветущий вид",
+        "kk": "Гүлденген келбетке ие болу",
+        "en": "Looks fresh and blooming"
+      }
+    },
+    {
+      "id": 10,
+      "phrase": "Ағыл-тегіл (еңіреп көз жасын көл қып) жылау",
+      "translation": {
+        "ru": "Горько плакать, рыдать",
+        "kk": "Ащы жылау, жылау",
+        "en": "To weep bitterly"
+      }
+    },
+    {
+      "id": 11,          "phrase": "Ағынан жарылу",
+      "translation": {
+        "ru": "Выложить всё, что есть на сердце",
+        "kk": "Ағынан жарылу",
+        "en": "To pour one’s heart out"
+      }
+    },
+    {
+      "id": 12,
+      "phrase": "Ағып тұр (тұрған)",
+      "translation": {
+        "ru": "Владеть словом, оратор",
+        "kk": "Сөзі ағып тұр",
+        "en": "Fluent speaker / eloquent"
+      }
+    },
+    {
+      "id": 13,
+      "phrase": "Адам айтқысыз / Адам айтып болмас",
+      "translation": {
+        "ru": "Невообразимый",
+        "kk": "Сөзбен айтып жеткізу мүмкін емес",
+        "en": "Unimaginable"
+      }
+    },
+    {
+      "id": 14,
+      "phrase": "Адам санатына қосылу / Адам қатарына қосылу",
+      "translation": {
+        "ru": "Выйти в люди",
+        "kk": "Адамдар қатарына қосылу",
+        "en": "To enter the ranks of people"
+      }
+    },
+    {
+      "id": 15,
+      "phrase": "Адасқан қаздай",
+      "translation": {
+        "ru": "Не находить себе места",
+        "kk": "Адасқан қаздай",
+        "en": "Like a lost goose"
+      }
+    },
+    {
+        "id": 16,
+        "phrase": "Адыра қал / Адырам қал / Адыра қалғыр / Қараң қалу",
+        "translation": {
+          "ru": "Сен тозаққа кет! / Бос кеңістікке айналу",
+          "kk": "Адыра қал! / Адырам қал / Адыра қалғыр / Қараң қалу",
+          "en": "Damn you! / May you vanish! / To hell with you!"
+        }
+      },
+      {
+        "id": 17,
+        "phrase": "Ажал айдау (түрту)",
+        "translation": {
+          "ru": "Қайғылы, өлімге әкелетін қадам жасау.",
+          "kk": "Ажал айдау (түрту)",
+          "en": "To take a fatal, doomed step."
+        }
+      },
+      {
+        "id": 18,
+        "phrase": "Ажал аузы",
+        "translation": {
+          "ru": "Перед смертью.",
+          "kk": "Өлім алдында",
+          "en": "Before death."
+        }
+      },
+      {
+        "id": 19,
+        "phrase": "Ажал жету (келу)",
+        "translation": {
+          "ru": "Настать смертному часу.",
+          "kk": "Өлім уақыты келді",
+          "en": "To come to one’s final hour."
+        }
+      },
+      {
+        "id": 20,
+        "phrase": "Ажалға дауа жоқ",
+        "translation": {
+          "ru": "От смерти не уйти",
+          "kk": "Өлімнен құтылу мүмкін емес",
+          "en": "You can’t escape death."
+        }
+      },
+      {
+        "id": 21,
+        "phrase": "Ажары тозу",
+        "translation": {
+          "ru": "Увядать былой красе",
+          "kk": "Бұрынғы сұлулықты жоғалту үшін",
+          "en": "To lose former beauty."
+        }
+      },
+      {
+        "id": 22,
+        "phrase": "Ажуа (әжуа) ету (қылу)",
+        "translation": {
+          "ru": "Осмеивать кого-либо.",
+          "kk": "Біреуді мазақ қылу",
+          "en": "To mock someone."
+        }
+      },
+      {
+        "id": 23,
+        "phrase": "Аза бойы қаза болу (тұру)",
+        "translation": {
+          "ru": "Оцепенеть.",
+          "kk": "Қорқыныштан денені діріл басады",
+          "en": "To freeze in fear."
+        }
+      },
+      {
+        "id": 24,
+        "phrase": "Азан-қазан қылу (болу)",
+        "translation": {
+          "ru": "Поднимать шум, суматоху.",
+          "kk": "Шу(ай-ғай шу) шығару",
+          "en": "To create a commotion."
+        }
+      },
+      {
+        "id": 25,
+        "phrase": "Азар да безер болу",
+        "translation": {
+          "ru": "Испытывать отвращение, не выносить чего-либо.",
+          "kk": "Жиренішті сезіну, бір нәрсеге шыдай алмау.",
+          "en": "To be disgusted or fed up."
+        }
+      },
+      {
+        "id": 26,
+        "phrase": "Азуы алты қарыс",
+        "translation": {
+          "ru": "Зубастый.",
+          "kk": "Тістей.(тістері көп)",
+          "en": "Aggressive, sharp-tongued."
+        }
+      },
+      {
+        "id": 27,
+        "phrase": "Азуын басу",
+        "translation": {
+          "ru": "Оказывать давление, проявлять враждебность.",
+          "kk": "Қысым көрсету, дұшпандық көрсету.",
+          "en": "To show hostility or pressure."
+        }
+      },
+      {
+        "id": 28,
+        "phrase": "Азы мен тозы",
+        "translation": {
+          "ru": "Никудышный, влачащий жалкое существование.",
+          "kk": "Құнсыз, бақытсыз өмір сүру.",
+          "en": "Miserable, worn out life."
+        }
+      },
+      {
+        "id": 29,
+        "phrase": "Азынап тұру (кету)",
+        "translation": {
+          "ru": "Озябнуть, выстудить.",
+          "kk": "Салқындау.",
+          "en": "To be chilled to the bone."
+        }
+      },
+      {
+        "id": 30,
+        "phrase": "Ай десе аузы бар (жоқ), күн десе көзі бар (жоқ)",
+        "translation": {
+          "ru": "Писаная красавица.",
+          "kk": "Жазылған сұлулық.",
+          "en": "To call it the moon, it has a mouth; to call it the sun, it has eyes. (Not in a fairytale, not in writing)"
+        }
+      },
+      {
+        "id": 31,
+        "phrase": "Ай қарап жүрсің бе?",
+        "translation": {
+          "ru": "Быть крайне рассеянным, невнимательным.",
+          "kk": "Өте бейқам, зейінсіз болу",
+          "en": "To be extremely absent-minded and inattentive."
+        }
+      },
+      {
+        "id": 32,
+        "phrase": "Ай мен күндей [сұлу]",
+        "translation": {
+          "ru": "Красавица.",
+          "kk": "Сұлу",
+          "en": "A beauty."
+        }
+      },
+      {
+        "id": 33,
+        "phrase": "Ай (айыр) мүйізді, аша тұяқты",
+        "translation": {
+          "ru": "Крупный и мелкий рогатый скот.",
+          "kk": "Ірі және ұсақ мал.",
+          "en": "Big and small cattle."
+        }
+      },
+      {
+        "id": 34,
+        "phrase": "Ай сүттей жарық",
+        "translation": {
+          "ru": "Лунная ночь.",
+          "kk": "Айлы түн.",
+          "en": "Moonlit night."
+        }
+      },
+      {
+        "id": 35,
+        "phrase": "Айбат (айбар) шегу (көрсету, қылу)",
+        "translation": {
+          "ru": "Стращать.",
+          "kk": "Қорқыту.",
+          "en": "To frighten."
+        }
+      },
+      {
+        "id": 36,
+        "phrase": "Айдағаны екі ешкі ысқырығы жер жарады",
+        "translation": {
+          "ru": "Погоняет всего двух коз, а свистит так, что земля трещит.",
+          "kk": "Ол тек екі ешкі айдайды, бірақ ысқырғаны сонша, жер жарылады.",
+          "en": "Chases only two goats, but whistles so loud the ground shakes."
+        }
+      },
+      {
+        "id": 37,
+        "phrase": "Айдай әлем",
+        "translation": {
+          "ru": "Весь мир.",
+          "kk": "Бүкіл(Бар) әлем.",
+          "en": "The whole world."
+        }
+      },
+      {
+        "id": 38,
+        "phrase": "Айдай таза, күндей нұрлы",
+        "translation": {
+          "ru": "Очень красивая.",
+          "kk": "Өте әдемі.(Өте сұлу)",
+          "en": "Very beautiful."
+        }
+      },
+      {
+        "id": 39,
+        "phrase": "Айдан (айдай) анық (ашық, айқын)",
+        "translation": {
+          "ru": "Совершенно очевидно, понятно.",
+          "kk": "Бұл анық.",
+          "en": "Absolutely clear, obvious."
+        }
+      },
+      {
+        "id": 40,
+        "phrase": "Айдан іздегені алдынан табылу",
+        "translation": {
+          "ru": "Неожиданная удача, везение.",
+          "kk": "Күтпеген сәттілік.",
+          "en": "Unexpected luck, fortune."
+        }
+      },
+      {
+        "id": 41,
+        "phrase": "Айдап салу",
+        "translation": {
+          "ru": "Подстрекать, подбивать на что-либо.",
+          "kk": "Бір нәрсеге итермелеу.",
+          "en": "To incite, provoke."
+        }
+      },
+      {
+        "id": 42,
+        "phrase": "Айдарынан жел есу",
+        "translation": {
+          "ru": "Гордиться, кичиться чем-либо.",
+          "kk": "Бір нәрсемен мақтану.",
+          "en": "To be proud, to boast."
+        }
+      },
+      {
+        "id": 43,
+        "phrase": "Айды аспанға бір шығару",
+        "translation": {
+          "ru": "Совершать что-либо выдающееся, из ряда вон выходящее.",
+          "kk": "Ерекше, әдеттен тыс нәрсе жасау.",
+          "en": "To do something extraordinary, remarkable."
+        }
+      },
+      {
+        "id": 44,
+        "phrase": "Айдын шалқар көл",
+        "translation": {
+          "ru": "Бескрайнее, безбрежное озеро.",
+          "kk": "Шексіз көл.",
+          "en": "Endless, boundless lake."
+        }
+      },
+      {
+        "id": 45,
+        "phrase": "Айдың күні аманда / Айдың аманында",
+        "translation": {
+          "ru": "В мирное время.",
+          "kk": "Бейбіт заманда.",
+          "en": "In peaceful times."
+        }
+      },
+      {
+        "id": 46,
+        "phrase": "Аймандай болу",
+        "translation": {
+          "ru": "Опозориться, осрамиться.",
+          "kk": "Өзін-өзі қорлау, масқара болу.",
+          "en": "To disgrace oneself."
+        }
+      },
+      {
+          "id": 47,
+          "phrase": "Аймандай қылу",
+          "translation": {
+            "ru": "Разоблачать за постыдное. (~Вывести на чистую воду)",
+            "kk": "Ұятты нәрсе үшін әшкерелеу.",
+            "en": "To expose someone for something shameful."
+          }
+      },
+        {
+          "id": 48,
+          "phrase": "Айна қатесі жоқ",
+          "translation": {
+            "ru": "Очень сильно похож на кого-либо. (~Точь в точь, как две капли воды)",
+            "kk": "Біреуге қатты ұқсас болу.",
+            "en": "To look exactly like someone."
+          }
+        },
+        {
+          "id": 49,
+          "phrase": "Айрандай аптап, күбідей күптеп",
+          "translation": {
+            "ru": "Властвовать, подчинить себе. (~Прибрать к рукам)",
+            "kk": "Билік жүргізу, өзіне бағындыру.",
+            "en": "To dominate, to take control."
+          }
+        },
+        {
+          "id": 50,
+          "phrase": "Айтқаны айдай келу",
+          "translation": {
+            "ru": "Происходить по предсказанному. (~Как в воду глядел)",
+            "kk": "Айтқаны дәл келу.",
+            "en": "To come true as predicted."
+          }
+        },
+        {
+          "id": 51,
+          "phrase": "Айтқаны өтіп, атқаны жетіп тұр",
+          "translation": {
+            "ru": "Человек, занимающий высокое служебное положение, пользующийся влиянием. (~Важная птица)",
+            "kk": "Билігі жүріп тұрған, сөзі өтімді адам.",
+            "en": "A person in high position with influence."
+          }
+        },
+        {
+          "id": 52,
+          "phrase": "Айтқанын екі етпеу",
+          "translation": {
+            "ru": "Всё выполнять беспрекословно. (~Сказано – сделано)",
+            "kk": "Бұйрықты бұлжытпай орындау.",
+            "en": "To follow orders without question."
+          }
+        },
+        {
+          "id": 53,
+          "phrase": "Айтқанына көндіріп, айдауына жүргізу",
+          "translation": {
+            "ru": "Заставлять слушаться. (~Вить верёвки)",
+            "kk": "Өз айтқанын орындату.",
+            "en": "To make someone obey one's will."
+          }
+        },
+        {
+          "id": 54,
+          "phrase": "Айтуға аузы бармау",
+          "translation": {
+            "ru": "Бояться или стесняется сказать что-либо. (~Язык не поворачивается)",
+            "kk": "Айтуға қиналу, ұялу.",
+            "en": "To hesitate or feel ashamed to say something."
+          }
+        },
+        {
+          "id": 55,
+          "phrase": "Айтулы көкжал",
+          "translation": {
+            "ru": "Матёрый волк; бесстрашный, известный отрицательными поступками.",
+            "kk": "Аты шыққан, батыр, қайсар адам.",
+            "en": "A seasoned, bold and notorious person."
+          }
+        },
+        {
+          "id": 56,
+          "phrase": "Айтулының өзі",
+          "translation": {
+            "ru": "Выдающийся.",
+            "kk": "Танымал, ерекше тұлға.",
+            "en": "Outstanding person."
+          }
+        },
+        {
+          "id": 57,
+          "phrase": "Айы оңынан туу",
+          "translation": {
+            "ru": "Ему повезло. (~Ему Фортуна улыбнулась)",
+            "kk": "Бағы жану, жолы болу.",
+            "en": "To be lucky."
+          }
+        },
+        {
+          "id": 58,
+          "phrase": "Айыбын (күнәсын) бетіне басу",
+          "translation": {
+            "ru": "Попрекать, обвинять кого-либо.",
+            "kk": "Айыбын бетіне басу.",
+            "en": "To reproach or blame someone."
+          }
+        },
+        {
+          "id": 59,
+          "phrase": "Айыз қандыру",
+          "translation": {
+            "ru": "Доставить удовольствие.",
+            "kk": "Қуанышқа бөлеу.",
+            "en": "To bring pleasure."
+          }
+        },
+        {
+          "id": 60,
+          "phrase": "Айызы қану",
+          "translation": {
+            "ru": "Получать удовольствие, испытывать удовлетворение.",
+            "kk": "Риза болу, ләззат алу.",
+            "en": "To feel satisfaction or pleasure."
+          }
+        },
+        {
+          "id": 61,
+          "phrase": "Айылын жимау",
+          "translation": {
+            "ru": "Не бояться, не обращать ни на что внимания. (~В ус не дует)",
+            "kk": "Ештеңеден қорықпау.",
+            "en": "To fear nothing, to remain unshaken."
+          }
+        },
+        {
+          "id": 62,
+          "phrase": "Айыр көмей, жез таңдай",
+          "translation": {
+            "ru": "Искусный оратор.",
+            "kk": "Шешен, сөзге шебер адам.",
+            "en": "An eloquent orator."
+          }
+        },
+        {
+          "id": 63,
+          "phrase": "Айырмасы жер мен көктей",
+          "translation": {
+            "ru": "Ничего похожего, полная противоположность. (~Как небо и земля)",
+            "kk": "Мүлде ұқсамайтын, қарама-қайшы.",
+            "en": "Completely different, like night and day."
+          }
+        },
+        {
+            "id": 64,
+            "phrase": "Ақ баласы",
+            "translation": {
+              "ru": "Молочная еда",
+              "kk": "Сүттен жасалған тағам",
+              "en": "Dairy food"
+            }
+          },
+          {
+            "id": 65,
+            "phrase": "Ақ бата",
+            "translation": {
+              "ru": "Благословение. ✯ Бабушка дала молодым благословение.",
+              "kk": "Бата беру. ✯ Әжей жастарға ақ батасын берді.",
+              "en": "Blessing. ✯ The grandmother gave the newlyweds her blessing."
+            }
+          },
+          {
+            "id": 66,
+            "phrase": "Ақ безер де көк безер болу",
+            "translation": {
+              "ru": "Отказываться, не признавать свою причастность к чему-либо.",
+              "kk": "Мойындамау, бас тарту.",
+              "en": "To deny responsibility or involvement."
+            }
+          },
+          {
+            "id": 67,
+            "phrase": "Ақ боран",
+            "translation": {
+              "ru": "Буран, вьюга.",
+              "kk": "Қарлы боран.",
+              "en": "Snowstorm, blizzard."
+            }
+          },
+          {
+            "id": 68,
+            "phrase": "Ақ дегені алғыс, қара дегені қарғыс",
+            "translation": {
+              "ru": "Влиятельное лицо, облечённое властью.",
+              "kk": "Билігі бар ықпалды адам.",
+              "en": "A powerful person whose words carry great weight."
+            }
+          },
+          {
+            "id": 69,
+            "phrase": "Ақ жарқын",
+            "translation": {
+              "ru": "Жизнерадостный.",
+              "kk": "Көңілді, шат-шадыман.",
+              "en": "Cheerful, joyful."
+            }
+          },
+          {
+            "id": 70,
+            "phrase": "Ақ жаулық",
+            "translation": {
+              "ru": "Супруга, жена.",
+              "kk": "Жұбайы, әйел адам.",
+              "en": "Wife, spouse."
+            }
+          },
+          {
+            "id": 71,
+            "phrase": "Ақ жауын",
+            "translation": {
+              "ru": "Затяжной дождь.",
+              "kk": "Ұзақ жауған жаңбыр.",
+              "en": "Long-lasting rain."
+            }
+          },
+          {
+            "id": 72,
+            "phrase": "Ақ жолтай болу",
+            "translation": {
+              "ru": "Человек, которому сопутствует удача.",
+              "kk": "Жолы болғыш адам.",
+              "en": "A lucky person, one who brings good fortune."
+            }
+          },
+          {
+            "id": 73,
+            "phrase": "Ақ жүрек",
+            "translation": {
+              "ru": "Прямодушный, откровенный.",
+              "kk": "Адал, шыншыл адам.",
+              "en": "Honest, open-hearted person."
+            }
+          },
+          {
+            "id": 74,
+            "phrase": "Ақ иық болу",
+            "translation": {
+              "ru": "Приедаться. Букв.: Плечам стать стёртыми добела. (~Набить оскомину)",
+              "kk": "Жалықтыру, мезі ету.",
+              "en": "To become tiresome. (Lit.: Shoulders worn white)"
+            }
+          },
+          {
+            "id": 75,
+            "phrase": "Ақ иық, мұз балақ",
+            "translation": {
+              "ru": "1. Особый вид беркута; 2. Сильный, выдающийся человек. Букв.: Белое плечо, ледяные ноги.",
+              "kk": "1. Бүркіттің ерекше түрі; 2. Қуатты, көрнекті адам.",
+              "en": "1. A special type of golden eagle; 2. Strong, outstanding person. (Lit.: White shoulder, icy foot)"
+            }
+          },
+          {
+            "id": 76,
+            "phrase": "Ақ киізге көтеру",
+            "translation": {
+              "ru": "Провозгласить ханом, короновать. Букв.: Поднять на белой кошме.",
+              "kk": "Хан көтеру, таққа отырғызу.",
+              "en": "To proclaim as khan, to enthrone. (Lit.: Raise on a white felt mat)"
+            }
+          },
+          {
+            "id": 77,
+            "phrase": "Ақ көз",
+            "translation": {
+              "ru": "Безрассудный, не думающий об опасности. Букв.: С белой пеленой на глазах.",
+              "kk": "Қатерді ескермейтін, ойсыз адам.",
+              "en": "Reckless, oblivious to danger. (Lit.: With white film over the eyes)"
+            }
+          },
+          {
+            "id": 78,
+            "phrase": "Ақ көйлек",
+            "translation": {
+              "ru": "Отзывчивый, добрый, щедрый. Букв.: Белое одеяние. (~Большого сердца)",
+              "kk": "Мейірімді, жомарт адам.",
+              "en": "Kind, generous, open-hearted. (Lit.: White dress)"
+            }
+          },
+          {
+            "id": 79,
+            "phrase": "Ақ көңіл",
+            "translation": {
+              "ru": "Простодушный. Букв.: Белая (чистая) душа. (~Добрый малый)",
+              "kk": "Адал, аңқау адам.",
+              "en": "Simple-hearted, sincere person. (Lit.: White soul)"
+            }
+          },
+          {
+            "id": 80,
+            "phrase": "Ақ қар, көк мұз",
+            "translation": {
+              "ru": "Лютая зима. Букв.: Белый снег, голубой лёд.",
+              "kk": "Қатты аяз, қытымыр қыс.",
+              "en": "Harsh winter. (Lit.: White snow, blue ice)"
+            }
+          },
+          {
+            "id": 81,
+            "phrase": "Ақ құба",
+            "translation": {
+              "ru": "Светлолицый, белокожий.",
+              "kk": "Ақ жүзді, ашық өңді адам.",
+              "en": "Fair-faced, light-skinned."
+            }
+          },
+          {
+            "id": 82,
+            "phrase": "Ақ май аузынан ағу",
+            "translation": {
+              "ru": "Иметь изобилие, жить в достатке. Букв.: Масло вытекает изо рта. (~Как сыр в масле кататься)",
+              "kk": "Молшылықта өмір сүру.",
+              "en": "To live in abundance. (Lit.: Butter flows from the mouth)"
+            }
+          },
+          {
+            "id": 83,
+            "phrase": "Ақ сайтан",
+            "translation": {
+              "ru": "Страсть, неудержимое влечение. Букв.: Белый чёрт.",
+              "kk": "Тежелмейтін құмарлық, ынтықтық.",
+              "en": "Passion, irresistible desire. (Lit.: White devil)"
+            }
+          },
+          {
+            "id": 84,
+            "phrase": "Ақ сайтаны ұстау",
+            "translation": {
+              "ru": "Взбеситься, желание совершить что-либо сумасбродное. Букв.: Вселиться бесу.",
+              "kk": "Кенеттен еліру, ойсыз әрекетке бару.",
+              "en": "To go mad, to be seized by a wild impulse. (Lit.: To be possessed by the white devil)"
+            }
+          },
+          {
+            "id": 85,
+            "phrase": "Ақ саңдақ жүйрік",
+            "translation": {
+              "ru": "1. Отборный скакун; 2. Непобедимый, не знающий поражений акын.",
+              "kk": "1. Таңдаулы жүйрік ат; 2. Жеңіліс көрмеген ақын.",
+              "en": "1. A top-class racehorse; 2. An undefeated, unbeatable poet."
+            }
+          },
+          {
+            "id": 86,
+            "phrase": "Ақ сирақ (сүйек) жұт",
+            "translation": {
+              "ru": "Джут, при котором погибает весь скот. Букв.: Джут, оставляющий одни белые кости.",
+              "kk": "Барлық малды қырып салған жұт.",
+              "en": "A disastrous winter (dzut) that kills all livestock. (Lit.: Only white bones remain)"
+            }
+          },
+          {
+            "id": 87,
+            "phrase": "Ақ сөйле",
+            "translation": {
+              "ru": "1. Говори правду, святую истину; 2. Быть счастью! Букв.: Говори белое.",
+              "kk": "1. Шындықты айт; 2. Жақсылық болсын!",
+              "en": "1. Speak the truth; 2. Let it be good! (Lit.: Speak white)"
+            }
+          },
+          {
+            "id": 88,
+            "phrase": "Ақ сұңқар",
+            "translation": {
+              "ru": "Настоящий джигит. Букв.: Белый сокол.",
+              "kk": "Нағыз жігіт.",
+              "en": "A true warrior, a brave man. (Lit.: White falcon)"
+            }
+          },
+          {
+            "id": 89,
+            "phrase": "Ақ сұпыдай",
+            "translation": {
+              "ru": "Букв.: Как нежный белый шёлк.",
+              "kk": "Ақ жібектей нәзік.",
+              "en": "As gentle as white silk."
+            }
+          },
+          {
+            "id": 90,
+            "phrase": "Ақ сүтін көкке сауу",
+            "translation": {
+              "ru": "Проклинать материнским молоком. Букв.: Выплеснуть своё материнское молоко в небо.",
+              "kk": "Аналық сүтін қарғау.",
+              "en": "To curse with a mother's milk. (Lit.: Pour mother’s milk into the sky)"
+            }
+          },
+          {
+            "id": 91,
+            "phrase": "Ақ түйенің қарны жарылу",
+            "translation": {
+              "ru": "Радостное обильное пиршество по особому случаю. Букв.: Брюху белого верблюда быть распоротым. (~Пир горой)",
+              "kk": "Ерекше қуанышқа толы той, думан.",
+              "en": "A joyful feast for a special occasion. (Lit.: The belly of the white camel bursts)"
+            }
+          },
+          {
+            "id": 92,
+            "phrase": "Ақ түтек (шұнақ) боран",
+            "translation": {
+              "ru": "Буран, вьюга. Букв.: Белая пурга.",
+              "kk": "Қатты боран, ақтүтек.",
+              "en": "Severe snowstorm. (Lit.: White blizzard)"
+            }
+          },
+          {
+            "id": 93,
+            "phrase": "Ақай жоқ, ноқай (тоқай) жоқ / Ай жоқ, шай жоқ",
+            "translation": {
+              "ru": "Бесцеремонный. (~Ни с того ни с сего)",
+              "kk": "Түкке қарамай істей салу.",
+              "en": "Without ceremony, out of nowhere."
+            }
+          },
+          {
+            "id": 94,
+            "phrase": "Аққа құдай жақ",
+            "translation": {
+              "ru": "Правда всегда берёт верх. Букв.: Бог — сторонник честного.",
+              "kk": "Шындық әрқашан жеңеді.",
+              "en": "Truth always prevails. (Lit.: God is on the side of the honest)"
+            }
+          },
+          {
+            "id": 95,
+            "phrase": "Ақпа құлақ",
+            "translation": {
+              "ru": "Рассеянный, забывчивый. Букв.: Дырявое ухо. (~Дырявая голова)",
+              "kk": "Ұмытшақ, зейінсіз.",
+              "en": "Absent-minded, forgetful. (Lit.: Leaky ear)"
+            }
+          },
+          {
+            "id": 96,
+            "phrase": "Ақсақты тыңдай, өтірікті шындай қылу",
+            "translation": {
+              "ru": "Врать беззастенчиво, бессовестно. Букв.: Сделать хромого здоровым, ложь — правдой.",
+              "kk": "Өтірікті шын сияқты етіп жеткізу.",
+              "en": "To lie shamelessly, make fiction seem real. (Lit.: Heal the lame, turn lies into truth)"
+            }
+          },
+          {
+            "id": 97,
+            "phrase": "Ақсарыбас айту (шалу)",
+            "translation": {
+              "ru": "Принести в жертву овцу.",
+              "kk": "Құрбандыққа қой шалу.",
+              "en": "To sacrifice a sheep."
+            }
+          },
+          {
+            "id": 98,
+            "phrase": "Ақтабан шұбырынды, алқа көл сұлама",
+            "translation": {
+              "ru": "Великое бедствие, неимоверные трудности и лишения.",
+              "kk": "Зұлмат замандар, ауыр қасірет.",
+              "en": "Great disaster, immense suffering and hardship."
+            }
+          },
+          {
+            "id": 99,
+            "phrase": "Ақтылы қой, алалы жылқы",
+            "translation": {
+              "ru": "Стада баранов и табуны лошадей всех мастей. Букв.: Белые овцы, пёстрые лошади.",
+              "kk": "Отар қойлар мен үйір жылқылар әр түрлі түсті.",
+              "en": "Herds of sheep and horses of various colors. (Lit.: White sheep, dappled horses)"
+            }
+          },
+          {
+            "id": 100,
+            "phrase": "Ақша бет",
+            "translation": {
+              "ru": "Белолицая (о женщине). Букв.: Белоснежное лицо.",
+              "kk": "Ашық жүзді, аққұба әйел.",
+              "en": "Fair-skinned (about a woman). (Lit.: Money-colored face)"
+            }
+          },
+          {
+            "id": 101,
+            "phrase": "Ақша табу",
+            "translation": {
+              "ru": "Зарабатывать. Букв.: Добывать деньги.",
+              "kk": "Ақша табу.",
+              "en": "To earn money. (Lit.: To find money)"
+            }
+          },
+          {
+            "id": 102,
+            "phrase": "Ақшам жамырау",
+            "translation": {
+              "ru": "Сияние на горизонте после заката. Букв.: Рассеяться солнечному свету.",
+              "kk": "Күн батқаннан кейінгі жарық.",
+              "en": "Evening twilight after sunset. (Lit.: Light scattering in the evening)"
+            }
+          },
+          {
+            "id": 103,
+            "phrase": "Ақылға сыймау",
+            "translation": {
+              "ru": "Уму не постижимо. Букв.: В уме не помещается.",
+              "kk": "Ақылға қонбайтын.",
+              "en": "Incomprehensible. (Lit.: Doesn't fit in the mind)"
+            }
+          },
+          {
+            "id": 104,
+            "phrase": "Ақылдан (ақылынан) адасу (айрылу, тану) / Ақылы ауысу (ауу)",
+            "translation": {
+              "ru": "Неспособность трезво рассуждать и действовать. Букв.: Терять разум. (Выжить из ума)",
+              "kk": "Ақылынан айырылу, есінен тану.(есінен айырылу)",
+              "en": "Losing the ability to think rationally. (Lit.: To lose one's mind)"
+            }
+          },
+          {
+            "id": 105,
+            "phrase": "Ақылдан шайнам жоқ",
+            "translation": {
+              "ru": "Очень глупый. Букв.: Ума на один зуб не хватит. (Глуп как пробка)",
+              "kk": "Өте ақымақ.",
+              "en": "Very foolish. (Lit.: Not even a bite of mind)"
+            }
+          },
+          {
+            "id": 106,
+            "phrase": "Ақылы алтыға, ойы онға бөліну",
+            "translation": {
+              "ru": "Букв.: Ум делится на шесть частей, а думы — на десять. (Голова идёт кругом)",
+              "kk": "Алаң көңіл, шатасу күйі.",
+              "en": "To be mentally scattered. (Lit.: Mind split into six, thoughts into ten)"
+            }
+          },
+          {
+            "id": 107,
+            "phrase": "Ақыр заман",
+            "translation": {
+              "ru": "Конец света.",
+              "kk": "Дүниенің соңы.",
+              "en": "End of the world."
+            }
+          },
+          {
+            "id": 108,
+            "phrase": "Ақырының қайырын берсін",
+            "translation": {
+              "ru": "Да не постигнет вас больше горе! (Выражение соболезнования).",
+              "kk": "Ақырында жақсылық болсын деген тілек.",
+              "en": "May no more grief come to you. (Expression of condolence)"
+            }
+          },
+          {
+            "id": 109,
+            "phrase": "Ала ауыз болу",
+            "translation": {
+              "ru": "Жить в раздоре, несогласии. Букв.: Ртам быть в разногласии.",
+              "kk": "Келіспеушілікте өмір сүру.",
+              "en": "To live in discord. (Lit.: Mouths being in disagreement)"
+            }
+          },
+          {
+            "id": 110,
+            "phrase": "Ала аяқ",
+            "translation": {
+              "ru": "Проходимец, пройдоха.",
+              "kk": "Алаяқ, арамза адам.",
+              "en": "Scammer, rogue."
+            }
+          },
+          {
+            "id": 111,
+            "phrase": "Ала болу",
+            "translation": {
+              "ru": "Не в ладу (ладах). Букв.: Жить в разногласии.",
+              "kk": "Ынтымақсыз болу.",
+              "en": "To be in disagreement. (Lit.: To be multicolored / not unified)"
+            }
+          },
+          {
+            "id": 112,
+            "phrase": "Ала жаздай",
+            "translation": {
+              "ru": "Всё лето. Букв.: В течение всего лета.",
+              "kk": "Жаз бойы.",
+              "en": "All summer long."
+            }
+          },
+          {
+            "id": 113,
+            "phrase": "Ала жібін аттамау",
+            "translation": {
+              "ru": "Быть очень честным и скромным. Букв.: Не перешагивать через чью-либо пёструю верёвку.",
+              "kk": "Адал, пәк болу.",
+              "en": "To be honest and modest. (Lit.: Not to step over someone’s colored string)"
+            }
+          },
+          {
+            "id": 114,
+            "phrase": "Ала көбең",
+            "translation": {
+              "ru": "Букв.: Чуть свет. (~Ни свет ни заря)",
+              "kk": "Таң сәрі.(сәресі)",
+              "en": "Very early morning. (Lit.: Mixed light)"
+            }
+          },
+          {
+            "id": 115,
+            "phrase": "Ала көздік қылу (жасау)",
+            "translation": {
+              "ru": "Проявлять недовольство, иметь недобрые помыслы. Букв.: Сделать недобрые глаза.",
+              "kk": "Көңілі толмау, арам ой ұстау.",
+              "en": "To show discontent or ill thoughts. (Lit.: To make an evil eye)"
+            }
+          },
+          {
+            "id": 116,
+            "phrase": "Ала көзімен ату",
+            "translation": {
+              "ru": "Злобно, сердито смотреть. Букв.: Стрелять недобрым взглядом. (~Метать искры)",
+              "kk": "Ашулы, жек көріп қарау.",
+              "en": "To glare angrily. (Lit.: To shoot with an evil eye)"
+            }
+          },
+          {
+            "id": 117,
+            "phrase": "Ала көлеңке (кеуім)",
+            "translation": {
+              "ru": "Сумерки. Букв.: Пёстрая тень.",
+              "kk": "Кешкі қараңғылық.",
+              "en": "Twilight. (Lit.: Mixed shadow)"
+            }
+          },
+          {
+            "id": 118,
+            "phrase": "Ала қайғы",
+            "translation": {
+              "ru": "Бесконечные переживания.",
+              "kk": "Бітпейтін уайым.",
+              "en": "Endless grief."
+            }
+          },
+          {
+            "id": 119,
+            "phrase": "Ала қаптың аузын ашу",
+            "translation": {
+              "ru": "Ничего не жалеть, выложить все угощения. Букв.: Пёстрый мешок открывать.",
+              "kk": "Барын аямай, дастархан жайып беру.",
+              "en": "To spare nothing, to offer all treats. (Lit.: To open the mouth of the multicolored sack)"
+            }
+          },
+          {
+            "id": 120,
+            "phrase": "Ала құйын",
+            "translation": {
+              "ru": "1. Вихрь; 2. Легкомысленный. Букв.: Пёстрый вихрь.",
+              "kk": "1. Дауыл, құйын; 2. Жеңілтек адам.",
+              "en": "1. Whirlwind; 2. Frivolous person. (Lit.: Colorful whirlwind)"
+            }
+          },
+          {
+            "id": 121,
+            "phrase": "Ала қыстай",
+            "translation": {
+              "ru": "Всю зиму. Букв.: В течение всей зимы.",
+              "kk": "Қыс бойы.",
+              "en": "All winter long."
+            }
+          },
+          {
+            "id": 122,
+            "phrase": "Ала өкпе болу",
+            "translation": {
+              "ru": "1. Зря стараться; 2. Болезнь лёгких животного. Букв.: Лёгким стать пёстрыми.",
+              "kk": "1. Еңбегің зая кету; 2. Малдың өкпе ауруы.",
+              "en": "1. To try in vain; 2. Lung disease in animals. (Lit.: Lungs becoming spotted)"
+            }
+          },
+          {
+            "id": 123,
+            "phrase": "Алақанына салу",
+            "translation": {
+              "ru": "Лелеять, опекать. Букв.: Положить на свою ладонь. (~Держать под крылышком)",
+              "kk": "Аялап, қамқорлық жасау.",
+              "en": "To cherish and protect. (Lit.: To put on the palm)"
+            }
+          },
+          {
+            "id": 124,
+            "phrase": "Алас ұру",
+            "translation": {
+              "ru": "Быть в состоянии крайнего беспокойства, тревоги. Букв.: Метаться. (~Не находить себе места)",
+              "kk": "Тынымсыз, мазасыз болу.",
+              "en": "To be in great anxiety or agitation. (Lit.: To flail about)"
+            }
+          },
+          {
+            "id": 125,
+            "phrase": "Алаштың азаматы",
+            "translation": {
+              "ru": "Сын казахского народа.",
+              "kk": "Қазақ халқының ұлы.",
+              "en": "A true son of the Kazakh people."
+            }
+          },
+          {
+            "id": 126,
+            "phrase": "Алды бар, арты жоқ",
+            "translation": {
+              "ru": "Вспыльчивый, но незлопамятный. Букв.: Начало есть, конца нет.",
+              "kk": "Тез ашуланатын, бірақ ренжігіш емес адам.",
+              "en": "Quick-tempered but forgiving. (Lit.: Has a front, but no back)"
+            }
+          },
+          {
+            "id": 127,
+            "phrase": "Алды кең",
+            "translation": {
+              "ru": "Добрый. Букв.: Перед ним просторно. (~Широкая натура)",
+              "kk": "Кең пейілді, мейірімді.",
+              "en": "Kind-hearted. (Lit.: His front is spacious)"
+            }
+          },
+          {
+            "id": 128,
+            "phrase": "Алды тар",
+            "translation": {
+              "ru": "Невозможно обратиться, подступиться. Букв.: Перед ним тесно. (~На козе не подъедешь)",
+              "kk": "Қиын мінезді, жақындауға болмайтын адам.",
+              "en": "Unapproachable. (Lit.: His front is narrow)"
+            }
+          },
+          {
+            "id": 129,
+            "phrase": "Алды-артын орау",
+            "translation": {
+              "ru": "Посторонними разговорами намеренно отвлекать внимание собеседника. Букв.: Окрутить со всех сторон. (~Заговаривать зубы)",
+              "kk": "Басқа әңгімемен әдейі жаңылдыру.",
+              "en": "To deliberately distract with unrelated talk. (Lit.: To wrap from all sides)"
+            }
+          },
+          {
+            "id": 130,
+            "phrase": "Алдын алу",
+            "translation": {
+              "ru": "Предупреждать, предотвращать.",
+              "kk": "Алдын болжау, сақтандыру.",
+              "en": "To prevent, to take precautions."
+            }
+          },
+          {
+            "id": 131,
+            "phrase": "Алдына жан салмау",
+            "translation": {
+              "ru": "Не иметь себе равных. Букв.: Перед собой никого не пропускать.",
+              "kk": "Өзіне тең келетін ешкім жоқ.",
+              "en": "To have no equal. (Lit.: Not letting anyone go ahead)"
+            }
+          },
+          {
+            "id": 132,
+            "phrase": "Алдынан көлденең шықпау",
+            "translation": {
+              "ru": "Не сметь перечить. Букв.: Не идти наперекор кому-либо.",
+              "kk": "Қарсы келмеу, қарсы шықпау.",
+              "en": "Not to oppose. (Lit.: Not to cross in front)"
+            }
+          },
+          {
+            "id": 133,
+            "phrase": "Алдынан өту",
+            "translation": {
+              "ru": "Просить разрешения, получить согласие. Букв.: Ставить кого-либо в известность.",
+              "kk": "Рұқсат сұрау, біреуді ескерту.",
+              "en": "To ask permission, to get approval. (Lit.: To pass in front)"
+            }
+          },
+          {
+            "id": 134,
+            "phrase": "Алдынан шығу",
+            "translation": {
+              "ru": "1. Быть препятствием, мешать; 2. Воздавать по заслугам. Букв.: Перегородить дорогу. (~Встать поперёк пути)",
+              "kk": "1. Кедергі жасау; 2. Тиісті жауап қайтару.",
+              "en": "1. To hinder; 2. To retaliate. (Lit.: To block the way)"
+            }
+          },
+          {
+            "id": 135,
+            "phrase": "Алпыс екі айлалы",
+            "translation": {
+              "ru": "Хитрый, как лиса. Букв.: Обладающий шестьюдесятью двумя уловками.",
+              "kk": "Айлакер, айлалы адам.(қу адам)",
+              "en": "Cunning, sly. (Lit.: One with sixty-two tricks)"
+            }
+          },
+          {
+            "id": 136,
+            "phrase": "Алпыс екі тамыры босау (ию)",
+            "translation": {
+              "ru": "Букв.: Шестьдесят два кровеносных сосуда смягчились (~Всей душой)",
+              "kk": "Жаны елжіреу, жүрегі елжіреу.",
+              "en": "To be deeply moved. (Lit.: Sixty-two veins have softened)"
+            }
+          },
+          {
+            "id": 137,
+            "phrase": "Алты аласы, бес бересі жоқ",
+            "translation": {
+              "ru": "Никому ничем не обязан, ни перед кем не в долгу. Букв.: Нет шести взяток и пяти долгов.",
+              "kk": "Ешкімге қарыз емес, ешкіммен ісі жоқ.",
+              "en": "Owes nothing to anyone. (Lit.: Has no six debts and five dues)"
+            }
+          },
+          {
+            "id": 138,
+            "phrase": "Алты алаш / Алты алаш баласы / Алты алаштың баласы",
+            "translation": {
+              "ru": "Весь казахский народ.",
+              "kk": "Бүкіл қазақ елі.",
+              "en": "The entire Kazakh nation."
+            }
+          },
+          {
+            "id": 139,
+            "phrase": "Алты бақан ала ауыз",
+            "translation": {
+              "ru": "Постоянные раздоры, вражда. Букв.: Разъединены, как шесть шестов качелей.",
+              "kk": "Ынтымағы жоқ, үнемі ұрыс-керісте жүргендер.",
+              "en": "Constant quarrels and disunity. (Lit.: Like six poles of a swing)"
+            }
+          },
+          {
+            "id": 140,
+            "phrase": "Алты қырдың астынан",
+            "translation": {
+              "ru": "Далеко идущие планы. Букв.: Из-за шести перевалов.",
+              "kk": "Алысқа жоспар құру.(Болашаққа жоспар құру)",
+              "en": "Long-term or far-reaching plans. (Lit.: From beyond six ridges)"
+            }
+          },
+          {
+            "id": 141,
+            "phrase": "Алтынмен аптап, күміспен күптеу",
+            "translation": {
+              "ru": "Сверкающий роскошью (здание). Букв.: Золотом и серебром отделать.",
+              "kk": "Аса сәнді, бай безендірілген.",
+              "en": "Lavishly decorated (e.g., building). (Lit.: Plated with gold, adorned with silver)"
+            }
+          },
+          {
+            "id": 142,
+            "phrase": "Алып қашты сөз (әңгіме) / Алып қашпа хабар",
+            "translation": {
+              "ru": "Слухи, толки.",
+              "kk": "Анық емес әңгіме, қауесет, өсек.",
+              "en": "Rumors, hearsay."
+            }
+          },
+          {
+            "id": 143,
+            "phrase": "Ант ұрған (атқан, соққан)",
+            "translation": {
+              "ru": "Проклятый, нечестивец. Букв.: Клятвой сражённый.",
+              "kk": "Ант берген.",
+              "en": "Cursed, wicked. (Lit.: Struck by a vow)"
+            }
+          },
+          {
+            "id": 144,
+            "phrase": "Ант-су ішу",
+            "translation": {
+              "ru": "Поклясться. Букв.: Пить клятвенную воду.",
+              "kk": "Ант ету.",
+              "en": "To swear an oath. (Lit.: To drink the oath water)"
+            }
+          },
+          {
+            "id": 145,
+            "phrase": "Аңсары ауу",
+            "translation": {
+              "ru": "Неудержимо гореть желанием. Букв.: Грезить о чём-либо.",
+              "kk": "Қалаусыз күту. (Бір нәрсе туралы армандау)",
+              "en": "To be irresistibly eager. (Lit.: To dream of something)"
+            }
+          },
+          {
+            "id": 146,
+            "phrase": "Аппақ сазандай",
+            "translation": {
+              "ru": "Белолицый. Букв.: Беленький, как сазан.",
+              "kk": "Ақ жүзді.",
+              "en": "Fair-skinned. (Lit.: White like a carp)"
+            }
+          },
+          {
+            "id": 147,
+            "phrase": "Аппақ самаладай жарқыраған",
+            "translation": {
+              "ru": "Ослепительно, ярко освещённый.",
+              "kk": "Жарықтықпен жарқыраған.",
+              "en": "Dazzlingly bright."
+            }
+          },
+          {
+            "id": 148,
+            "phrase": "Аптығы (әптігі) басылу",
+            "translation": {
+              "ru": "Успокоиться. Букв.: Остудить пыл.",
+              "kk": "Құштарлықты басу.",
+              "en": "To calm down. (Lit.: To cool down the heat)"
+            }
+          },
+          {
+            "id": 149,
+            "phrase": "Апшысын бидайықтай қуыру",
+            "translation": {
+              "ru": "Букв.: Терпение зажарить, как кречета. (~Задать перцу)",
+              "kk": "Төзімділікпен қуыру.",
+              "en": "To roast with patience. (Lit.: To roast like a hawk)"
+            }
+          },
+          {
+            "id": 150,
+            "phrase": "Апы (апын) кіріп, күпі (күпін) шығу",
+            "translation": {
+              "ru": "Суетиться. Букв.: Второпях зайти и выйти.",
+              "kk": "Құйқалы жүріс.",
+              "en": "To bustle around. (Lit.: To enter and exit in a hurry)"
+            }
+          },
+          {
+            "id": 151,
+            "phrase": "Ара түсу",
+            "translation": {
+              "ru": "Поддерживать чью-то сторону, заступаться за кого-либо. Букв.: Вмешиваться. (~Встать горой за кого-либо)",
+              "kk": "Біреудің жағында болу.",
+              "en": "To support someone's side, intervene. (Lit.: To step in)"
+            }
+          },
+          {
+            "id": 152,
+            "phrase": "Арадай (араша) талау",
+            "translation": {
+              "ru": "Нападать со всех сторон. Букв.: Кусаться, как рой пчёл.",
+              "kk": "Барлық жағынан шабуыл жасау.",
+              "en": "To attack from all sides. (Lit.: To sting like a swarm of bees)"
+            }
+          },
+          {
+            "id": 153,
+            "phrase": "Араларына ала жіп түсу",
+            "translation": {
+              "ru": "Поссориться, отдалиться друг от друга. Букв.: Между ними пролегла пёстрая нить. (~Между ними чёрная кошка пробежала)",
+              "kk": "Араларында қайшылық (ұрыс) пайда болу.",
+              "en": "To fall out, drift apart. (Lit.: A colorful thread has been drawn between them)"
+            }
+          },
+          {
+            "id": 154,
+            "phrase": "Араларынан жел есті, ел көшті",
+            "translation": {
+              "ru": "Охладели друг к другу. Букв.: Между ними подул ветер и проехала кочёвка.",
+              "kk": "Аралары суып қалды.",
+              "en": "They grew distant. (Lit.: The wind blew between them, and the caravan moved on)"
+            }
+          },
+          {
+            "id": 155,
+            "phrase": "Арам тамақ",
+            "translation": {
+              "ru": "Тунеядец, паразит. Букв.: Незаработанная еда.",
+              "kk": "Еңбексіз табылған тамақ.",
+              "en": "A freeloader, a parasite. (Lit.: Food not earned)"
+            }
+          },
+          {
+            "id": 156,
+            "phrase": "Арам тер",
+            "translation": {
+              "ru": "Бесполезные, безрезультатные затраты. Букв.: Напрасный пот. (~Тратить порох зря)",
+              "kk": "Пайдасыз, нәтижесіз шығын.",
+              "en": "Useless, unproductive effort. (Lit.: Fruitless labor)"
+            }
+          },
+          {
+            "id": 157,
+            "phrase": "Араны ашылу / Аранын ашу",
+            "translation": {
+              "ru": "Алчный, жадный человек. Букв.: У него огромный аппетит. (~Ненасытная утроба)",
+              "kk": "Ащы құштарлық.",
+              "en": "A greedy person. (Lit.: A huge appetite)"
+            }
+          },
+          {
+            "id": 158,
+            "phrase": "Арасы жер мен көктей",
+            "translation": {
+              "ru": "Полная противоположность. (~Как небо и земля)",
+              "kk": "Толық қарама-қайшы (қарама қарсы).",
+              "en": "A complete contrast. (Like the sky and the earth)"
+            }
+          },
+          {
+            "id": 159,
+            "phrase": "Арасы суып кету",
+            "translation": {
+              "ru": "Охладеть друг к другу. Букв.: Между ними пробежал холодок.",
+              "kk": "Аралары суып қалды.",
+              "en": "To grow distant. (Lit.: A coldness passed between them)"
+            }
+          },
+          {
+            "id": 160,
+            "phrase": "Aрасынан (араларынан) қыл өтпеу",
+            "translation": {
+              "ru": "Очень дружны, неразлучны. Букв.: Между ними и волосок не пройдёт. (~Не разлей вода)",
+              "kk": "Араларында ештеңе де бөгет болмайды.",
+              "en": "Very close, inseparable. (Lit.: Not even a hair can pass between them)"
+            }
+          },
+          {
+            "id": 161,
+            "phrase": "Арда ему",
+            "translation": {
+              "ru": "Питаться молоком матери до двух-трёх лет.",
+              "kk": "Ана сүтін екі-үш жасқа дейін емізу.",
+              "en": "To nurse on mother's milk until two to three years old."
+            }
+          },
+          {
+            "id": 162,
+            "phrase": "Арзан қол",
+            "translation": {
+              "ru": "Товар низкого качества, дешёвый. Букв.: Дешёвая рука.",
+              "kk": "Арзан сапасыз зат.",
+              "en": "Low-quality, cheap product. (Lit.: Cheap hand)"
+            }
+          },
+          {
+            "id": 163,
+            "phrase": "Арқа еті арша (арса), борбай еті борша болу",
+            "translation": {
+              "ru": "Трудиться до изнеможения, изнурять себя тяжёлой работой. Букв.: (~Трудиться до седьмого пота)",
+              "kk": "Қиын еңбекпен шаршау.",
+              "en": "To work to exhaustion, to wear oneself out with hard work. (Lit.: Work until the seventh sweat)"
+            }
+          },
+          {
+            "id": 164,
+            "phrase": "Арқа сүйеу (тұту)",
+            "translation": {
+              "ru": "Стоять за чьей-либо спиной. Букв.: Опираться на чью-либо спину. (~Как за каменной спиной)",
+              "kk": "Біреудің артында тұру.",
+              "en": "To stand behind someone. (Lit.: To lean on someone's back)"
+            }
+          },
+          {
+            "id": 165,
+            "phrase": "Арқасына аяздай бату",
+            "translation": {
+              "ru": "Мучить, терзать, угнетать. Букв.: Мороз пронизывает спину.",
+              "kk": "Күйзелту, қинау.",
+              "en": "To torment, to harass. (Lit.: Cold piercing the back)"
+            }
+          },
+          {
+            "id": 166,
+            "phrase": "Арқау болу",
+            "translation": {
+              "ru": "Стать основной идеей. Букв.: Стать основной нитью. (~Проходить красной нитью)",
+              "kk": "Негізгі идея болу.",
+              "en": "To become the main idea. (Lit.: To become the main thread)"
+            }
+          },
+          {
+            "id": 167,
+            "phrase": "Арманда кету",
+            "translation": {
+              "ru": "Умереть, не достигнув мечты. ✯ Не дождёшься! (Умрёшь, не достигнув мечты)",
+              "kk": "Арманына жете алмай өту.",
+              "en": "To die without achieving one's dream. ✯ You will die without seeing your dreams come true!"
+            }
+          },
+          {
+            "id": 168,
+            "phrase": "Артына сөз қалдыру",
+            "translation": {
+              "ru": "Оставить добрую память; духовное наследие. Букв.: Оставить после себя слово.",
+              "kk": "Жақсы із қалдыру; рухани мұра.",
+              "en": "To leave a good memory; spiritual legacy. (Lit.: To leave a word behind)"
+            }
+          },
+          {
+            "id": 169,
+            "phrase": "Аршын төс",
+            "translation": {
+              "ru": "Высокая грудь.",
+              "kk": "Жоғары төс.",
+              "en": "High chest."
+            }
+          },
+          {
+            "id": 170,
+            "phrase": "Арық айтып, семіз шық",
+            "translation": {
+              "ru": "Говори меньше, да с толком. Букв.: Будь скуп на слова, щедр на дела.",
+              "kk": "Аз, бірақ нақты сөйле. (мағыналы)",
+              "en": "Speak less, but with meaning. (Lit.: Be sparing with words, generous with actions)"
+            }
+          },
+          {
+            "id": 171,
+            "phrase": "Арыстанның аузы, түрікпеннің төрі",
+            "translation": {
+              "ru": "Нечто труднодоступное, находящееся глубоко под землёй, в преисподней. Букв.: Пасть льва, почётное место в юрте у туркмена.",
+              "kk": "Қол жетпейтін, тереңде жатқан нәрсе.",
+              "en": "Something inaccessible, buried deep underground, in the abyss. (Lit.: The mouth of a lion, the honored place in a Turkmen's yurt)"
+            }
+          },
+          {
+            "id": 172,
+            "phrase": "Ас беру",
+            "translation": {
+              "ru": "Устроить поминки в годовщину смерти.",
+              "kk": "Қайтыс болған адамның жылдық асы.",
+              "en": "To hold a memorial feast on the anniversary of someone's death."
+            }
+          },
+          {
+            "id": 173,
+            "phrase": "Асан қайғыға түсу (салыну)",
+            "translation": {
+              "ru": "Стать пессимистом. Букв.: Впасть в скорбь.",
+              "kk": "Пессимист болу. (Қайғыға түсу)",
+              "en": "To become a pessimist. (Lit.: To fall into sorrow)"
+            }
+          },
+          {
+            "id": 174,
+            "phrase": "Асарын асап, жасарын жасау",
+            "translation": {
+              "ru": "Много повидавший на своём веку человек. Букв.: Съевший положенное и немало проживший.",
+              "kk": "Көп көрген адам.",
+              "en": "A person who has seen much in life. (Lit.: One who has eaten what’s due and lived much)"
+            }
+          },
+          {
+            "id": 175,
+            "phrase": "Асқар бел",
+            "translation": {
+              "ru": "Опора и защита, защитник. Букв.: Высочайший горный кряж.",
+              "kk": "Қорған, тірек.",
+              "en": "Support and protection, defender. (Lit.: Highest mountain ridge)"
+            }
+          },
+          {
+            "id": 176,
+            "phrase": "Аспан (ауа, әуе) айналып жерге түскендей",
+            "translation": {
+              "ru": "Неимоверная, невыносимая жара. Букв.: Словно небосвод, перевернувшись, упал на землю. (~Адова жара)",
+              "kk": "Шыдамсыз ыстық. (ып-ыстық, өте ыстық)",
+              "en": "Incredibly unbearable heat. (Lit.: As if the sky, flipping, fell to the ground)"
+            }
+          },
+          {
+            "id": 177,
+            "phrase": "Аспанға көтеру",
+            "translation": {
+              "ru": "Расхвалить сверх меры. Букв.: Поднять до небес. (~Превозносить до небес)",
+              "kk": "Артық мақтау.",
+              "en": "To praise excessively. (Lit.: To raise to the heavens)"
+            }
+          },
+          {
+            "id": 178,
+            "phrase": "Аспанға ұшса аяғынан тарту, жерге кірсе желкесінен тарту",
+            "translation": {
+              "ru": "Любым способом разыскать кого-либо. Букв.: На небо взлетит – за ноги стянут, под землёй укроется – за загривок вытянут. (~Достать из-под земли)",
+              "kk": "Кімді болса да табу үшін барлық амалдар жасау.",
+              "en": "To search for someone by any means. (Lit.: If they fly to the sky, pull them by the feet; if they hide underground, pull them by the neck)"
+            }
+          },
+          {
+            "id": 179,
+            "phrase": "Аспанды алақандай, жерді тебінгідей ету",
+            "translation": {
+              "ru": "Прибедняться, представлять что-либо хуже, чем есть на самом деле. Букв.: Небо представить величиной с ладонь, землю – размером с тебенёк.",
+              "kk": "Қиындықты әсірелеп көрсету.",
+              "en": "To downplay, to present something worse than it actually is. (Lit.: To make the sky the size of the palm and the earth the size of a fist)"
+            }
+          },
+          {
+            "id": 180,
+            "phrase": "Аспанмен таласқан (тілдескен)",
+            "translation": {
+              "ru": "Очень высокий. Букв.: Спорящий с небом. ✯ Я хочу жить на верхнем этаже очень высокого дома.",
+              "kk": "Өте биік.",
+              "en": "Very high. (Lit.: One who disputes with the sky)"
+            }
+          },
+          {
+            "id": 181,
+            "phrase": "Астар болмау",
+            "translation": {
+              "ru": "Не годится в сравнение с чем-либо. Букв.: Даже на подкладку не пойдёт. (~Не идёт ни в какое сравнение)",
+              "kk": "Салыстыруға келмейтін.",
+              "en": "Not suitable for comparison. (Lit.: Even not fit for lining)"
+            }
+          },
+          {
+            "id": 182,
+            "phrase": "Асығы алшысынан түсу",
+            "translation": {
+              "ru": "Крупно повезло. Букв.: Его асыку упасть выемкой вверх. ✯ Пусть всем во всём везёт!",
+              "kk": "Жақсы сәттілік.",
+              "en": "To be very lucky. (Lit.: The arrow falls with the notch upwards)"
+            }
+          },
+          {
+            "id": 183,
+            "phrase": "Асығы түгел",
+            "translation": {
+              "ru": "Быть в полном благополучии. Букв.: Его асыки целы. (~Жить припеваючи, В ажуре)",
+              "kk": "Тәтті өмір сүру.",
+              "en": "To live in full prosperity. (Lit.: His dice are whole)"
+            }
+          },
+          {
+            "id": 184,
+            "phrase": "Асылдың сынығы",
+            "translation": {
+              "ru": "Потомок достойных родителей. Букв.: Обломок драгоценного. (~Белая кость)",
+              "kk": "Дұрыс тәрбие алған ұрпақ.",
+              "en": "Descendant of worthy parents. (Lit.: A shard of something precious)"
+            }
+          },
+          {
+            "id": 185,
+            "phrase": "Асыр салу",
+            "translation": {
+              "ru": "Озорничать.",
+              "kk": "Тентектеу. (еркелеу)",
+              "en": "To misbehave, to be mischievous."
+            }
+          },
+          {
+            "id": 186,
+            "phrase": "Ат басын (тұмсығын) тіреу",
+            "translation": {
+              "ru": "Очень много. Букв.: Приткнуть голову коня.",
+              "kk": "Өте көп.",
+              "en": "A lot. (Lit.: To stop a horse’s head)"
+            }
+          },
+          {
+            "id": 187,
+            "phrase": "Ат бауырына алу",
+            "translation": {
+              "ru": "Бить, избивать. Букв.: Положить под лошадь. (~Всыпать горячих)",
+              "kk": "Ұру, соққы жасау.",
+              "en": "To beat, to strike. (Lit.: To place under the horse)"
+            }
+          },
+          {
+            "id": 188,
+            "phrase": "Ат жақты",
+            "translation": {
+              "ru": "Овальное лицо.",
+              "kk": "Дөңгелек бет (жүз).",
+              "en": "Oval face."
+            }
+          },
+          {
+            "id": 189,
+            "phrase": "Ат жалын тартып міну",
+            "translation": {
+              "ru": "Повзрослеть, возмужать. Букв.: Сесть на лошадь, взявшись за гриву.",
+              "kk": "Есею, ересек болу.",
+              "en": "To mature, to become adult. (Lit.: To ride a horse, holding its mane)"
+            }
+          },
+          {
+            "id": 190,
+            "phrase": "Ат кекілін кесісу",
+            "translation": {
+              "ru": "Вынужденно порвать связи, отношения с кем-либо. Букв.: Враждующим сторонам взаимно подрезать чёлки лошадей.",
+              "kk": "Қарсы тараптармен қарым-қатынасты үзуді талап ету.",
+              "en": "To forcefully sever ties or relations with someone. (Lit.: To mutually trim the forelocks of horses)"
+            }
+          },
+          {
+            "id": 191,
+            "phrase": "Aт көпір",
+            "translation": {
+              "ru": "Очень много. (~Хоть отбавляй)",
+              "kk": "Өте көп.",
+              "en": "A lot. (Lit.: A horse bridge)"
+            }
+          },
+          {
+            "id": 192,
+            "phrase": "Ат қойып, айдар тағу",
+            "translation": {
+              "ru": "Давать прозвище. Букв.: Давать прозвище и цеплять чёлку. (~Наклеивать ярлык)",
+              "kk": "Лақап ат беру.",
+              "en": "To give a nickname. (Lit.: To give a nickname and attach a forelock)"
+            }
+          },
+          {
+            "id": 193,
+            "phrase": "Ат қою",
+            "translation": {
+              "ru": "1. Дать имя, название; 2. Прискакать на похороны на коне, плача и причитая.",
+              "kk": "1. Аты-жөн, ат қою; 2. Жаназаға атқа мініп, жылап, еңіреп бару.",
+              "en": "1. To give a name, a title; 2. To arrive at a funeral on a horse, crying and wailing."
+            }
+          },
+          {
+            "id": 194,
+            "phrase": "Ат құйрығын кесіп кету",
+            "translation": {
+              "ru": "Стать недругом. Букв.: Подрезать хвост коню. (~Расстаться раз и навсегда)",
+              "kk": "Қарсылас болу.",
+              "en": "To become an enemy. (Lit.: To cut the horse’s tail and leave)"
+            }
+          },
+          {
+            "id": 195,
+            "phrase": "Ат құлағы көрінбейтін ақ боран",
+            "translation": {
+              "ru": "Сильный буран. Букв.: Такой буран, когда не видно ушей лошади.",
+              "kk": "Жауын-шашын, боран.",
+              "en": "A strong blizzard. (Lit.: A blizzard so strong you can’t see the horse’s ears)"
+            }
+          },
+          {
+            "id": 196,
+            "phrase": "Aт құлағында ойнау",
+            "translation": {
+              "ru": "Лихо скакать на коне. Букв.: Играть на ушах лошади.",
+              "kk": "Ат үстінде құмарлықпен шабу. (Жылқы үстінде құмарлықпен шабу.)",
+              "en": "To ride the horse with skill. (Lit.: To play on the horse’s ears)"
+            }
+          },
+          {
+            "id": 197,
+            "phrase": "Ат мініп, аспан асынып",
+            "translation": {
+              "ru": "Совершить набег. Букв.: Сесть на коня и небо сделать себе защитой.",
+              "kk": "Шабуыл жасау.(Рейд)",
+              "en": "To make a raid. (Lit.: To ride a horse and use the sky as protection)"
+            }
+          },
+          {
+            "id": 198,
+            "phrase": "Ат ойнату",
+            "translation": {
+              "ru": "1. Высокомерно относиться к кому-либо, издеваться, глумиться; 2. Наводить страх. Букв.: Заставлять играть коня.",
+              "kk": "1. Біреуге менмендікпен қарау, келеке ету, келемеждеу; 2. Қорқыныш сезімін ояту.",
+              "en": "1. To behave arrogantly towards someone, to mock; 2. To intimidate. (Lit.: To make the horse play)"
+            }
+          },
+          {
+            "id": 199,
+            "phrase": "Ат өтті",
+            "translation": {
+              "ru": "Не спешиваясь. (Между прочим)",
+              "kk": "Түсірмей. (Айтпақшы)",
+              "en": "Without haste. (Lit.: The passing of a horse)"
+            }
+          },
+          {
+            "id": 200,
+            "phrase": "Ат салысу",
+            "translation": {
+              "ru": "Принимать участие, оказывать помощь. Букв.: Пустить в ход коня.",
+              "kk": "Қатысу, көмек көрсету.",
+              "en": "To participate, to help. (Lit.: To set the horse in motion)"
+            }
+          },
+          {
+            "id": 201,
+            "phrase": "Ат сауырын беру",
+            "translation": {
+              "ru": "Помочь в трудный момент. Букв.: Подать круп лошади.",
+              "kk": "Қиын уақытта көмектесу.",
+              "en": "To help in difficult times. (Lit.: To offer the horse’s back)"
+            }
+          },
+          {
+            "id": 202,
+            "phrase": "Ат сауырына мінгізу",
+            "translation": {
+              "ru": "Говорится, когда неугодную жену отвозят обратно к родителям. Букв.: Посадить на круп коня.",
+              "kk": "Қалаусыз әйелді әке-шешесіне қайтарғанда айтылады.",
+              "en": "To send back an unwanted wife to her parents. (Lit.: To place her on the horse’s back)"
+            }
+          },
+          {
+            "id": 203,
+            "phrase": "Ат сүйек беру",
+            "translation": {
+              "ru": "Подхватить прославленного воина, у которого в бою гибнет конь, и посадить на другого коня. Букв.: Оказывать помощь конём.",
+              "kk": "Аты соғыста өлген атақты жауынгерді алып, басқа атқа мінгізу.",
+              "en": "To help a famous warrior whose horse has been killed in battle by providing a new one. (Lit.: To offer a horse)"
+            }
+          },
+          {
+            "id": 204,
+            "phrase": "Ат төбеліндей",
+            "translation": {
+              "ru": "Очень мало. Букв.: Как белое пятно на лбу лошади. (~Раз-два и обчёлся)",
+              "kk": "Өте аз.",
+              "en": "Very little. (Lit.: Like a small white spot on a horse’s forehead)"
+            }
+          },
+          {
+            "id": 205,
+            "phrase": "Ат тұмсығын тіреу",
+            "translation": {
+              "ru": "Очень много.",
+              "kk": "Өте көп.",
+              "en": "So many."
+            }
+          }
+  ]

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "1",
+    "phrase": "Асығы алшысынан түсті",
+    "translation": {
+      "ru": "Ему повезло",
+      "kk": "Оған жолы болды",
+      "en": "He got lucky"
+    },
+    "level": "easy",
+    "topic": "удача"
+  },
+  {
+    "id": "2",
+    "phrase": "Таяқ тастам жер",
+    "translation": {
+      "ru": "Очень близко",
+      "kk": "Өте жақын",
+      "en": "Very close"
+    },
+    "level": "medium",
+    "topic": "расстояние"
+  }
+]
