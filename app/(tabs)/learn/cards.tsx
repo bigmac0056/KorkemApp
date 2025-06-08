@@ -8,18 +8,20 @@ import {
   Easing,
   ScrollView,
 } from 'react-native';
-import CARD_DATA from '@/data/card.json';
-import { useTranslation } from '@/hooks/useTranslation';
+import CARD_DATA from '../../../data/card.json';
+import { useTranslation } from '../../../hooks/useTranslation';
+import { useLanguageContext } from '../../../contexts/LanguageContext';
 
 const levels = ['all', 'easy', 'medium', 'hard'];
 
 export default function CardsScreen() {
   const [level, setLevel] = useState('all');
-  const [filteredData, setFilteredData] = useState(CARD_DATA);
+  const [filteredData, setFilteredData] = useState<typeof CARD_DATA>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
-  const { t } = useTranslation();
+  const t = useTranslation();
+  const { language } = useLanguageContext();
 
   useEffect(() => {
     const filtered = level === 'all'
@@ -70,31 +72,45 @@ export default function CardsScreen() {
 
   const backAnimatedStyle = {
     transform: [{ rotateY: backInterpolate }],
-    position: 'absolute',
+    position: 'absolute' as const,
     top: 0,
   };
 
   const card = filteredData[currentIndex];
+
+  const getTranslation = () => {
+    if (!card) return '';
+    switch (language) {
+      case 'ru':
+        return card.translation.ru;
+      case 'kz':
+        return card.translation.kk;
+      case 'en':
+        return card.translation.en;
+      default:
+        return card.translation.ru;
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🃏{t.cards}</Text>
 
       <View style={styles.levelSelector}>
-  <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.levelButtonsContainer}>
-    {levels.map((lvl) => (
-      <TouchableOpacity
-        key={lvl}
-        style={[styles.levelButton, level === lvl && styles.levelButtonActive]}
-        onPress={() => setLevel(lvl)}
-      >
-        <Text style={[styles.levelButtonText, level === lvl && styles.levelButtonTextActive]}>
-          {lvl.toUpperCase()}
-        </Text>
-      </TouchableOpacity>
-    ))}
-  </ScrollView>
-</View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.levelButtonsContainer}>
+          {levels.map((lvl) => (
+            <TouchableOpacity
+              key={lvl}
+              style={[styles.levelButton, level === lvl && styles.levelButtonActive]}
+              onPress={() => setLevel(lvl)}
+            >
+              <Text style={[styles.levelButtonText, level === lvl && styles.levelButtonTextActive]}>
+                {lvl.toUpperCase()}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
       {card ? (
         <>
@@ -110,9 +126,9 @@ export default function CardsScreen() {
                 <Text style={styles.cardText}>{card.phrase}</Text>
               </Animated.View>
               <Animated.View
-                style={[styles.card, backAnimatedStyle, styles.cardBack]}
+                style={[styles.card, styles.cardBack, backAnimatedStyle]}
               >
-                <Text style={styles.cardText}>{card.translation.ru}</Text>
+                <Text style={styles.cardText}>{getTranslation()}</Text>
               </Animated.View>
             </TouchableOpacity>
           </View>
@@ -139,36 +155,31 @@ const styles = StyleSheet.create({
   title: { fontSize: 28, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
   counter: { fontSize: 16, textAlign: 'center', marginBottom: 20, color: '#666' },
   levelSelector: {
-  height: 50,
-  marginBottom: 16,
-},
-
-levelButtonsContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingHorizontal: 10,
-},
-
-levelButton: {
-  paddingVertical: 6,
-  paddingHorizontal: 14,
-  backgroundColor: '#eee',
-  borderRadius: 20,
-  marginRight: 8,
-},
-
-levelButtonActive: {
-  backgroundColor: '#1976D2',
-},
-
-levelButtonText: {
-  fontWeight: 'bold',
-  color: '#333',
-},
-
-levelButtonTextActive: {
-  color: '#fff',
-},
+    height: 50,
+    marginBottom: 16,
+  },
+  levelButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  levelButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    backgroundColor: '#eee',
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  levelButtonActive: {
+    backgroundColor: '#1976D2',
+  },
+  levelButtonText: {
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  levelButtonTextActive: {
+    color: '#fff',
+  },
   cardContainer: {
     alignItems: 'center',
     justifyContent: 'center',

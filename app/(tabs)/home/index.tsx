@@ -1,45 +1,66 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from '../../../hooks/useTranslation';
+import { useLanguageContext } from '../../../contexts/LanguageContext';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const t = useTranslation();
+  const { language, setLanguage } = useLanguageContext();
+
   const languageLabels = {
     kz: 'kz',
     ru: 'ru',
-    en: 'eng',
-  };
-  const { language, setLanguage } = useLanguage();
-
-  const cycleLanguage = () => {
-    const next = language === 'kz' ? 'ru' : language === 'ru' ? 'en' : 'kz';
-    setLanguage(next);
+    en: 'en',
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t.home}</Text>
+      <View style={styles.languageSelector}>
+        {Object.entries(languageLabels).map(([lang, label]) => (
+          <TouchableOpacity
+            key={lang}
+            style={[
+              styles.languageButton,
+              language === lang && styles.activeLanguage,
+            ]}
+            onPress={() => setLanguage(lang as 'ru' | 'kz' | 'en')}
+          >
+            <Text
+              style={[
+                styles.languageText,
+                language === lang && styles.activeLanguageText,
+              ]}
+            >
+              {label.toUpperCase()}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
-      <Pressable onPress={cycleLanguage}>
-        <Text style={styles.languageText}>
-          🌐 {t.currentLanguage}: {languageLabels[language]}
-        </Text>
-      </Pressable>
+      <View style={styles.menuContainer}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => router.push('/home/phrases')}
+        >
+          <Text style={styles.menuText}>{t.phrases}</Text>
+        </TouchableOpacity>
 
-      <Pressable style={styles.button} onPress={() => router.push('/home/phrases')}>
-        <Text style={styles.buttonText}>{t.phrases}</Text>
-      </Pressable>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => router.push('/home/proverbs')}
+        >
+          <Text style={styles.menuText}>{t.proverbs}</Text>
+        </TouchableOpacity>
 
-      <Pressable style={styles.button} onPress={() => router.push('/home/proverbs')}>
-        <Text style={styles.buttonText}>{t.proverbs}</Text>
-      </Pressable>
-
-      
-      <Pressable style={styles.button} onPress={() => router.push('/home/mesk')}>
-        <Text style={styles.buttonText}>📘 {t.prepareMesk}</Text>
-      </Pressable>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => router.push('/home/mesk-preparation')}
+        >
+          <Text style={styles.menuText}>{t.prepareMesk}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -48,33 +69,49 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingBottom: 100,
-    justifyContent: 'center',
     backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
+  languageSelector: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginBottom: 20,
-    textAlign: 'center',
-    color: '#000',
+  },
+  languageButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    marginHorizontal: 5,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+  },
+  activeLanguage: {
+    backgroundColor: '#007AFF',
   },
   languageText: {
     fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
-    marginBottom: 20,
+    color: '#333',
   },
-  button: {
-    backgroundColor: '#1976D2',
-    padding: 15,
+  activeLanguageText: {
+    color: '#fff',
+  },
+  menuContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  menuItem: {
+    backgroundColor: '#f8f9fa',
+    padding: 20,
     borderRadius: 10,
     marginBottom: 15,
-    alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  buttonText: {
-    color: '#fff',
+  menuText: {
     fontSize: 18,
     fontWeight: '600',
+    color: '#333',
+    textAlign: 'center',
   },
 });

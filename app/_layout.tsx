@@ -1,11 +1,15 @@
 import { Slot } from 'expo-router';
 import { LanguageProvider } from '../contexts/LanguageContext';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-export default function RootLayout() {
-  
+const RootLayout = () => {
   return (
-    <LanguageProvider>
-      <Slot />
-    </LanguageProvider>
+    <SafeAreaProvider>
+      <LanguageProvider>
+        <Slot />
+      </LanguageProvider>
+    </SafeAreaProvider>
   );
-}
+};
+
+export default RootLayout;

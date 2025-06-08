@@ -1,7 +1,7 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useState } from 'react';
-import { TestItem } from '@/types/TestItem';
-import { useTranslation } from '@/hooks/useTranslation';
+import { TestItem } from '../../../../types/TestItem';
+import { useTranslation } from '../../../../hooks/useTranslation';
 
 type Props = {
   testData: TestItem[];

@@ -1,202 +1,124 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
+  TextInput,
   Pressable,
-  Keyboard,
-  ScrollView,
-  Platform,
   Alert,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { useTranslation } from '@/hooks/useTranslation';
-
-const languages = [
-  { code: 'en', label: 'English' },
-  { code: 'ru', label: 'Русский' },
-  { code: 'fr', label: 'Français' },
-];
+import { useTranslation } from '../../../hooks/useTranslation';
+import { useLanguageContext } from '../../../contexts/LanguageContext';
 
 export default function TranslatorScreen() {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState('');
-  const [sourceLang, setSourceLang] = useState('en');
-  const [targetLang, setTargetLang] = useState('ru');
-  const { t } = useTranslation();
+  const [text, setText] = useState('');
+  const [translatedText, setTranslatedText] = useState('');
+  const { language } = useLanguageContext();
+  const t = useTranslation();
 
-  // Показать уведомление при заходе на экран
-  useEffect(() => {
-    Alert.alert(
-      'Переводчик недоступен',
-      'Функция перевода временно отключена. Ожидается в следующем обновлении.',
-      [{ text: 'OK' }]
-    );
-  }, []);
-
-  const translate = async () => {
-    Keyboard.dismiss();
-
-    setResult(
-      t.translationUnavailable || 'Переводчик временно недоступен.'
-    );
-  };
-
-  const swapLanguages = () => {
-    if (sourceLang === targetLang) return;
-    setSourceLang(targetLang);
-    setTargetLang(sourceLang);
-    if (result) {
-      setInput(result);
-      setResult('');
+  const handleTranslate = () => {
+    if (!text.trim()) {
+      Alert.alert(t.error, t.enterText);
+      return;
     }
+
+    // Здесь будет логика перевода
+    Alert.alert(t.error, t.translationUnavailable);
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled"
-    >
-      <Text style={styles.title}>🌐 {t.translator}</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>{t.translator}</Text>
 
-      <View style={styles.row}>
-        <View style={styles.pickerContainer}>
-          <Text style={styles.label}>{t.fromLanguage}:</Text>
-          <View style={styles.pickerWrapper}>
-            <Picker
-              selectedValue={sourceLang}
-              onValueChange={(value) => setSourceLang(value)}
-              style={styles.picker}
-            >
-              {languages.map((lang) => (
-                <Picker.Item key={lang.code} label={lang.label} value={lang.code} />
-              ))}
-            </Picker>
-          </View>
-        </View>
-
-        <Pressable onPress={swapLanguages} style={styles.swapButton}>
-          <Text style={styles.swapText}>⇄</Text>
-        </Pressable>
-
-        <View style={styles.pickerContainer}>
-          <Text style={styles.label}>{t.toLanguage}:</Text>
-          <View style={styles.pickerWrapper}>
-            <Picker
-              selectedValue={targetLang}
-              onValueChange={(value) => setTargetLang(value)}
-              style={styles.picker}
-            >
-              {languages.map((lang) => (
-                <Picker.Item key={lang.code} label={lang.label} value={lang.code} />
-              ))}
-            </Picker>
-          </View>
-        </View>
+      <View style={styles.languageContainer}>
+        <Text style={styles.languageLabel}>{t.fromLanguage}</Text>
+        <Text style={styles.languageValue}>{language.toUpperCase()}</Text>
       </View>
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, styles.textArea]}
         placeholder={t.enterText}
-        placeholderTextColor="#666"
-        value={input}
-        onChangeText={setInput}
+        value={text}
+        onChangeText={setText}
         multiline
+        numberOfLines={6}
+        textAlignVertical="top"
       />
 
-      <Pressable style={styles.button} onPress={translate}>
+      <Pressable style={styles.button} onPress={handleTranslate}>
         <Text style={styles.buttonText}>{t.translate}</Text>
       </Pressable>
 
-      {!!result && (
-        <View style={styles.resultBox}>
-          <Text style={styles.resultText}>{result}</Text>
+      {translatedText ? (
+        <View style={styles.resultContainer}>
+          <Text style={styles.resultLabel}>{t.result}</Text>
+          <Text style={styles.resultText}>{translatedText}</Text>
         </View>
-      )}
-    </ScrollView>
+      ) : null}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
-    backgroundColor: '#F8F9FA',
-    flexGrow: 1,
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
-    color: '#333',
+    marginBottom: 20,
   },
-  row: {
+  languageContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 10,
-  },
-  pickerContainer: {
-    flex: 4,
-  },
-  pickerWrapper: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: Platform.OS === 'ios' ? 1 : 0,
-    borderColor: '#ccc',
-    overflow: 'hidden',
-  },
-  picker: {
-    height: 50,
-    width: '100%',
-  },
-  label: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 4,
-  },
-  swapButton: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    marginBottom: 15,
   },
-  swapText: {
-    fontSize: 28,
-    color: '#1E88E5',
+  languageLabel: {
+    fontSize: 16,
+    color: '#666',
+  },
+  languageValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#007AFF',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
-    padding: 12,
+    backgroundColor: '#f8f9fa',
+    padding: 15,
     borderRadius: 8,
-    marginVertical: 12,
+    marginBottom: 15,
     fontSize: 16,
-    color: '#000',
-    minHeight: 80,
-    textAlignVertical: 'top',
+  },
+  textArea: {
+    height: 150,
   },
   button: {
-    backgroundColor: '#1E88E5',
-    paddingVertical: 12,
+    backgroundColor: '#007AFF',
+    padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 20,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
   },
-  resultBox: {
-    backgroundColor: '#E3F2FD',
-    padding: 16,
+  resultContainer: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#f8f9fa',
     borderRadius: 8,
   },
-  resultText: {
-    fontSize: 18,
+  resultLabel: {
+    fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    marginBottom: 10,
+  },
+  resultText: {
+    fontSize: 16,
+    color: '#333',
   },
 });

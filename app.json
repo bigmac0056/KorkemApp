@@ -2,9 +2,9 @@
   "expo": {
     "name": "KorkemApp",
     "slug": "KorkemApp",
+    "jsEngine": "jsc",
     "version": "1.0.0",
     "orientation": "portrait",
-    "privacy": "public",
     "assetBundlePatterns": [
       "**/*"
     ],

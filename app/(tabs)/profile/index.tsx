@@ -1,112 +1,117 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguageContext } from '../../../contexts/LanguageContext';
+import { useTranslation } from '../../../hooks/useTranslation';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { language, setLanguage } = useLanguage();
-  const { t } = useTranslation();
+  const { language, setLanguage } = useLanguageContext();
+  const t = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t.profile}</Text>
-
-      <Pressable style={styles.button} onPress={() => router.push('/profile/my-profile')}>
-        <Text style={styles.buttonText}>{t.myProfile}</Text>
-      </Pressable>
-
-      <Pressable style={styles.button} onPress={() => router.push('/profile/favorites')}>
-        <Text style={styles.buttonText}>{t.favorites}</Text>
-      </Pressable>
-
-      <Pressable style={styles.button} onPress={() => router.push('/profile/translator')}>
-        <Text style={styles.buttonText}>{t.translator}</Text>
-      </Pressable>
-
-      <Pressable style={styles.button} onPress={() => router.push('/profile/contact')}>
-        <Text style={styles.buttonText}>{t.contactUs}</Text>
-      </Pressable>
-
-      <View style={styles.languageContainer}>
-        <Text style={styles.languageLabel}>{t.chooseLanguage}</Text>
+      
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{t.currentLanguage}</Text>
         <View style={styles.languageButtons}>
-          <LangButton label="Қаз" selected={language === 'kz'} onPress={() => setLanguage('kz')} />
-          <LangButton label="Рус" selected={language === 'ru'} onPress={() => setLanguage('ru')} />
-          <LangButton label="Eng" selected={language === 'en'} onPress={() => setLanguage('en')} />
+          <TouchableOpacity
+            style={[styles.languageButton, language === 'ru' && styles.activeLanguage]}
+            onPress={() => setLanguage('ru')}
+          >
+            <Text style={[styles.languageText, language === 'ru' && styles.activeLanguageText]}>Русский</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.languageButton, language === 'kz' && styles.activeLanguage]}
+            onPress={() => setLanguage('kz')}
+          >
+            <Text style={[styles.languageText, language === 'kz' && styles.activeLanguageText]}>Қазақша</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.languageButton, language === 'en' && styles.activeLanguage]}
+            onPress={() => setLanguage('en')}
+          >
+            <Text style={[styles.languageText, language === 'en' && styles.activeLanguageText]}>English</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </View>
-  );
-}
 
-function LangButton({
-  label,
-  selected,
-  onPress,
-}: {
-  label: string;
-  selected: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable style={[styles.langButton, selected && styles.langButtonSelected]} onPress={onPress}>
-      <Text style={styles.langButtonText}>{label}</Text>
-    </Pressable>
+      <View style={styles.menuSection}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/profile/favorites')}>
+          <FontAwesome name="star" size={24} color="#007AFF" />
+          <Text style={styles.menuText}>{t.favorites}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/profile/translator')}>
+          <FontAwesome name="language" size={24} color="#007AFF" />
+          <Text style={styles.menuText}>{t.translator}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/profile/contact')}>
+          <FontAwesome name="envelope" size={24} color="#007AFF" />
+          <Text style={styles.menuText}>{t.contactUs}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     padding: 20,
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#000',
-    textAlign: 'center',
   },
-  button: {
-    backgroundColor: '#1976D2',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    marginBottom: 12,
+  section: {
+    marginBottom: 30,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  languageContainer: {
-    marginTop: 20,
-  },
-  languageLabel: {
-    fontSize: 16,
-    marginBottom: 10,
-    color: '#555',
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 15,
   },
   languageButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
-  langButton: {
-    backgroundColor: '#1976D2',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+  languageButton: {
+    flex: 1,
+    padding: 10,
     borderRadius: 8,
-    opacity: 0.7,
+    borderWidth: 1,
+    borderColor: '#007AFF',
+    marginHorizontal: 5,
+    alignItems: 'center',
   },
-  langButtonSelected: {
-    opacity: 1,
+  activeLanguage: {
+    backgroundColor: '#007AFF',
   },
-  langButtonText: {
-    color: '#fff',
+  languageText: {
+    color: '#007AFF',
     fontSize: 16,
-    fontWeight: '600',
+  },
+  activeLanguageText: {
+    color: '#fff',
+  },
+  menuSection: {
+    marginTop: 20,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  menuText: {
+    fontSize: 16,
+    marginLeft: 15,
+    color: '#333',
   },
 });

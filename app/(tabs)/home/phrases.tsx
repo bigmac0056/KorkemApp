@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,58 +11,78 @@ import {
   Easing,
   Platform
 } from 'react-native';
-import { useFavoritesStore } from '@/stores/favoritesStore';
+import { useFavoritesStore } from '../../../stores/favoritesStore';
 import { FontAwesome } from '@expo/vector-icons';
-import { useState, useMemo, useRef, useEffect } from 'react';
-import phrasesData from '@/data/phrases.json';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useTranslation } from '@/hooks/useTranslation';
-import { AccordionGroup } from '@/components/AccordionGroup';
-
-type Phrase = {
-  id: number;
-  phrase: string;
-  translation: {
-    ru: string;
-    kk: string;
-    en: string;
-  };
-};
+import { useLanguageContext } from '../../../contexts/LanguageContext';
+import { useTranslation } from '../../../hooks/useTranslation';
+import { AccordionGroup } from '../../../components/AccordionGroup';
+import { getAllPhrases, searchPhrases, Phrase } from '../../../database/database';
 
 export default function PhrasesScreen() {
-  const { language } = useLanguage();
+  const { language } = useLanguageContext();
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const [searchQuery, setSearchQuery] = useState('');
-  const [phrases, setPhrases] = useState<Phrase[]>(phrasesData);
+  const [phrases, setPhrases] = useState<Phrase[]>([]);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-  const scrollRef = useRef<ScrollView>(null);
-  const sectionPositions = useRef<Record<string, number>>({});
+  const scrollRef = React.useRef<ScrollView>(null);
+  const sectionPositions = React.useRef<Record<string, number>>({});
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const { t } = useTranslation();
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const t = useTranslation();
 
-  const groupedPhrases = useMemo(() => {
-    const filtered = phrases.filter(item =>
-      item.phrase.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.translation.ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.translation.kk.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.translation.en.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  // Казахский алфавит для сортировки
+  const kazakhAlphabet = [
+    'А', 'Ә', 'Б', 'В', 'Г', 'Ғ', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Қ',
+    'Л', 'М', 'Н', 'Ң', 'О', 'Ө', 'П', 'Р', 'С', 'Т', 'У', 'Ұ', 'Ү', 'Ф', 'Х',
+    'Һ', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'І', 'Ь', 'Э', 'Ю', 'Я'
+  ];
 
+  const loadPhrases = useCallback(() => {
+    getAllPhrases((error, result) => {
+      if (error) {
+        console.error('Error loading phrases:', error);
+        return;
+      }
+      setPhrases(result);
+    });
+  }, []);
+
+  useEffect(() => {
+    loadPhrases();
+  }, [loadPhrases]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      searchPhrases(searchQuery, (error, result) => {
+        if (error) {
+          console.error('Error searching phrases:', error);
+          return;
+        }
+        setPhrases(result);
+      });
+    } else {
+      loadPhrases();
+    }
+  }, [searchQuery, loadPhrases]);
+
+  const groupedPhrases = React.useMemo(() => {
     const groups: Record<string, Record<string, Phrase[]>> = {};
 
-    filtered.forEach(item => {
-      const firstLetter = item.phrase[0].toUpperCase();
-      const twoLetters = item.phrase.slice(0, 2).toUpperCase();
+    phrases.forEach(item => {
+      const phraseUpper = item.phrase.toUpperCase();
+      const firstLetter = phraseUpper[0] || '';
+      const twoLetters = phraseUpper.slice(0, 2) || firstLetter;
 
-      if (!groups[firstLetter]) groups[firstLetter] = {};
-      if (!groups[firstLetter][twoLetters]) groups[firstLetter][twoLetters] = [];
+      if (kazakhAlphabet.includes(firstLetter)) {
+        if (!groups[firstLetter]) groups[firstLetter] = {};
+        if (!groups[firstLetter][twoLetters]) groups[firstLetter][twoLetters] = [];
 
-      groups[firstLetter][twoLetters].push(item);
+        groups[firstLetter][twoLetters].push(item);
+      }
     });
 
     return groups;
-  }, [searchQuery, phrases]);
+  }, [phrases]);
 
   useEffect(() => {
     if (searchQuery.length > 0) {
@@ -117,7 +138,9 @@ export default function PhrasesScreen() {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  const availableLetters = Object.keys(groupedPhrases).sort();
+  const availableLetters = Object.keys(groupedPhrases).sort((a, b) => {
+    return kazakhAlphabet.indexOf(a) - kazakhAlphabet.indexOf(b);
+  });
 
   return (
     <>
@@ -154,7 +177,11 @@ export default function PhrasesScreen() {
             <Text style={styles.sectionTitle}>{letter}</Text>
 
             {Object.entries(groupedPhrases[letter])
-              .sort()
+              .sort(([a], [b]) => {
+                const aIndex = kazakhAlphabet.indexOf(a[0]) * 100 + (kazakhAlphabet.indexOf(a[1]) || 0);
+                const bIndex = kazakhAlphabet.indexOf(b[0]) * 100 + (kazakhAlphabet.indexOf(b[1]) || 0);
+                return aIndex - bIndex;
+              })
               .map(([twoLetters, items]) => (
                 <AccordionGroup
                   key={twoLetters}

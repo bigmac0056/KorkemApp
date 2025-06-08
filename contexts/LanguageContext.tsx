@@ -1,32 +1,56 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { create } from 'zustand';
 
-type Language = 'kz' | 'ru' | 'en';
+export type Language = 'ru' | 'kz' | 'en';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
 }
 
-const LanguageContext = createContext<LanguageContextType>({
-  language: 'kz',
+const defaultContext: LanguageContextType = {
+  language: 'ru',
   setLanguage: () => {},
-});
+};
 
-export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [language, setLanguageState] = useState<Language>('kz');
+const LanguageContext = createContext<LanguageContextType>(defaultContext);
+
+interface LanguageStore {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+}
+
+export const useLanguageStore = create<LanguageStore>((set) => ({
+  language: 'ru',
+  setLanguage: (lang) => set({ language: lang }),
+}));
+
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLanguageState] = useState<Language>('ru');
 
   useEffect(() => {
-    AsyncStorage.getItem('language').then((stored) => {
-      if (stored === 'kz' || stored === 'ru' || stored === 'en') {
-        setLanguageState(stored);
+    const loadLanguage = async () => {
+      try {
+        const savedLanguage = await AsyncStorage.getItem('language');
+        if (savedLanguage && ['ru', 'kz', 'en'].includes(savedLanguage)) {
+          setLanguageState(savedLanguage as Language);
+        }
+      } catch (error) {
+        console.error('Error loading language:', error);
       }
-    });
+    };
+
+    loadLanguage();
   }, []);
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    AsyncStorage.setItem('language', lang);
+  const setLanguage = async (lang: Language) => {
+    try {
+      await AsyncStorage.setItem('language', lang);
+      setLanguageState(lang);
+    } catch (error) {
+      console.error('Error saving language:', error);
+    }
   };
 
   return (
@@ -34,6 +58,13 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
       {children}
     </LanguageContext.Provider>
   );
-};
+}
 
-export const useLanguage = () => useContext(LanguageContext);
+export function useLanguageContext() {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    console.warn('useLanguageContext must be used within a LanguageProvider');
+    return defaultContext;
+  }
+  return context;
+}

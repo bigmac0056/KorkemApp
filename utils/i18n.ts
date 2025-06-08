@@ -1,3 +1,3 @@
-import translations from '@/data/locales.json';
+import translations from '../data/locales.json';
 
 export { translations };
