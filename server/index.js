@@ -8,8 +8,17 @@ const jwt = require('jsonwebtoken');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:8082', 'http://localhost:8081'],
+  credentials: true
+}));
 app.use(express.json());
+
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`, req.body);
+  next();
+});
 
 // Port configuration
 const PORT = process.env.PORT || 3001;
@@ -82,11 +91,13 @@ const auth = async (req, res, next) => {
 // Routes
 app.post('/api/auth/register', async (req, res) => {
   try {
+    console.log('Registration request received:', req.body);
     const { name, email, password } = req.body;
     
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      console.log('User already exists:', email);
       return res.status(400).json({ message: 'User already exists' });
     }
     
@@ -99,6 +110,8 @@ app.post('/api/auth/register', async (req, res) => {
       email,
       password: hashedPassword,
     });
+    
+    console.log('User created successfully:', email);
     
     // Generate token
     const token = jwt.sign(
@@ -116,19 +129,24 @@ app.post('/api/auth/register', async (req, res) => {
 
 app.post('/api/auth/login', async (req, res) => {
   try {
+    console.log('Login request received:', req.body);
     const { email, password } = req.body;
     
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('Invalid password for user:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+    
+    console.log('Login successful for user:', email);
     
     // Generate token
     const token = jwt.sign(

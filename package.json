@@ -40,7 +40,7 @@
     "expo-linear-gradient": "^14.1.5",
     "expo-linking": "~7.1.4",
     "expo-module-scripts": "^4.0.5",
-    "expo-router": "~5.0.7",
+    "expo-router": "~5.1.0",
     "expo-splash-screen": "~0.30.9",
     "expo-sqlite": "~15.2.12",
     "expo-status-bar": "~2.2.3",
@@ -59,7 +59,13 @@
     "react-native-web": "^0.20.0",
     "react-router-dom": "^7.5.3",
     "styled-components": "^6.1.17",
-    "zustand": "^5.0.5"
+    "zustand": "^5.0.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "mongoose": "^8.4.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

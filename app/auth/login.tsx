@@ -35,6 +35,8 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       console.log('Attempting to login with:', { email });
+      console.log('API URL:', API_URL);
+      
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -43,13 +45,16 @@ export default function LoginScreen() {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
       console.log('Login response:', data);
       
       if (response.ok) {
+        console.log('Login successful, navigating to home...');
         await login(data.token, data.role);
         router.replace('/(tabs)/home');
       } else {
+        console.log('Login failed:', data.message);
         Alert.alert(t.error, data.message || t.loginError);
       }
     } catch (error) {
@@ -57,6 +62,7 @@ export default function LoginScreen() {
       let errorMessage = t.loginError;
       
       if (error instanceof TypeError) {
+        console.log('Network error type:', error.message);
         if (error.message.includes('Network request failed')) {
           errorMessage = 'Не удалось подключиться к серверу. Пожалуйста, проверьте подключение к интернету.';
         } else if (error.message.includes('timed out')) {

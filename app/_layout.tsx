@@ -44,7 +44,9 @@ function RootLayoutInner() {
     }
 
     const inAuthGroup = segments[0] === 'auth';
-    if (!isAuthenticated && !inAuthGroup) {
+    const isWelcomeScreen = segments[0] === 'welcome';
+    
+    if (!isAuthenticated && !inAuthGroup && !isWelcomeScreen) {
       router.push('/auth/login');
     } else if (isAuthenticated && inAuthGroup) {
       router.push('/(tabs)/home');

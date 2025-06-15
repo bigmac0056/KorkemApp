@@ -54,7 +54,10 @@ export default function WelcomeScreen() {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.button, styles.registerButton]}
-              onPress={() => router.push('/auth/register')}
+              onPress={() => {
+                console.log('Register button pressed');
+                router.push('/auth/register');
+              }}
             >
               <Text style={styles.buttonText}>
                 {language === 'ru'
@@ -67,7 +70,10 @@ export default function WelcomeScreen() {
 
             <TouchableOpacity
               style={[styles.button, styles.loginButton]}
-              onPress={() => router.push('/auth/login')}
+              onPress={() => {
+                console.log('Login button pressed');
+                router.push('/auth/login');
+              }}
             >
               <Text style={[styles.buttonText, styles.loginButtonText]}>
                 {language === 'ru'
