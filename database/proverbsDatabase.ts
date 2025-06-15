@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import proverbsData from '../data/proverbs.json';
 
 // Тип для пословицы
-export type Proverb = {
+export interface Proverb {
   id: number;
   proverb: string;
   translation: {
@@ -10,7 +10,7 @@ export type Proverb = {
     kk: string;
     en: string;
   };
-};
+}
 
 type SQLiteCallback = (error: Error | null) => void;
 type SQLiteResultCallback = (error: Error | null, result: any) => void;
@@ -27,7 +27,6 @@ interface CountRow {
   count: number;
 }
 
-// Используем openDatabaseSync, так как это единственный доступный метод
 const db = SQLite.openDatabaseSync('proverbs.db');
 
 // Функция для экранирования строк в SQL
@@ -36,75 +35,72 @@ const escapeString = (str: string): string => {
 };
 
 // Создаем таблицу и загружаем данные
-const initializeDatabase = async () => {
+export const initProverbsDatabase = async (callback: (error: Error | null) => void) => {
   try {
-    // Удаляем таблицу, если она существует
-    await db.execAsync('DROP TABLE IF EXISTS proverbs');
-    
     // Создаем таблицу
-    await db.execAsync(`CREATE TABLE proverbs (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      proverb TEXT NOT NULL,
-      translation_ru TEXT NOT NULL,
-      translation_kk TEXT NOT NULL,
-      translation_en TEXT NOT NULL
-    )`);
-
-    // Загружаем все пословицы из JSON
-    const batchSize = 100;
-    for (let i = 0; i < proverbsData.length; i += batchSize) {
-      const batch = proverbsData.slice(i, i + batchSize);
-      const values = batch.map(proverb => 
-        `('${escapeString(proverb.proverb)}', '${escapeString(proverb.translation.ru)}', '${escapeString(proverb.translation.kk)}', '${escapeString(proverb.translation.en)}')`
-      ).join(',');
-      
-      const sql = `INSERT INTO proverbs (proverb, translation_ru, translation_kk, translation_en) VALUES ${values}`;
-      await db.execAsync(sql);
-    }
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS proverbs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        proverb TEXT NOT NULL,
+        translation_ru TEXT NOT NULL,
+        translation_kk TEXT NOT NULL,
+        translation_en TEXT NOT NULL
+      );
+    `);
 
     // Проверяем количество записей
-    const countResult = await db.getAllAsync('SELECT COUNT(*) as count FROM proverbs');
-    const count = (countResult[0] as CountRow).count;
+    const result = await db.getAllAsync('SELECT COUNT(*) as count FROM proverbs');
+    const count = result[0]?.count || 0;
 
     if (count === 0) {
-      throw new Error('Database is still empty after initialization');
+      // Добавляем начальные данные
+      const initialProverbs = [
+        {
+          proverb: 'Алтын қазық',
+          translation_ru: 'Золотой кол',
+          translation_kk: 'Алтын қазық',
+          translation_en: 'Golden stake'
+        },
+        {
+          proverb: 'Білгенге маржан',
+          translation_ru: 'Знание - жемчужина',
+          translation_kk: 'Білгенге маржан',
+          translation_en: 'Knowledge is a pearl'
+        }
+      ];
+
+      for (const proverb of initialProverbs) {
+        await db.execAsync(`
+          INSERT INTO proverbs (proverb, translation_ru, translation_kk, translation_en)
+          VALUES (?, ?, ?, ?);
+        `, [proverb.proverb, proverb.translation_ru, proverb.translation_kk, proverb.translation_en]);
+      }
     }
+    callback(null);
   } catch (error) {
-    console.error('Error initializing database:', error);
-    throw error;
+    console.error('Database initialization error:', error);
+    callback(error instanceof Error ? error : new Error(String(error)));
   }
 };
 
-export const initProverbsDatabase = (callback: SQLiteCallback) => {
-  initializeDatabase()
-    .then(() => {
-      callback(null);
-    })
-    .catch((error) => {
-      console.error('Database initialization failed:', error);
-      callback(error instanceof Error ? error : new Error(String(error)));
-    });
-};
-
 // Получение всех пословиц
-export const getAllProverbs = (callback: SQLiteResultCallback) => {
-  db.getAllAsync('SELECT * FROM proverbs')
-    .then((rows) => {
-      const proverbs = (rows as SQLiteRow[]).map(row => ({
-        id: row.id,
-        proverb: row.proverb,
-        translation: {
-          ru: row.translation_ru,
-          kk: row.translation_kk,
-          en: row.translation_en,
-        },
-      }));
-      callback(null, proverbs);
-    })
-    .catch((error) => {
-      console.error('Error getting proverbs:', error);
-      callback(error instanceof Error ? error : new Error(String(error)), null);
-    });
+export const getAllProverbs = async (callback: (error: Error | null, result: Proverb[]) => void) => {
+  try {
+    const rows = await db.getAllAsync('SELECT * FROM proverbs');
+    const proverbs: Proverb[] = rows.map((row: any) => ({
+      id: row.id,
+      proverb: row.proverb,
+      translation: {
+        ru: row.translation_ru,
+        kk: row.translation_kk,
+        en: row.translation_en
+      }
+    }));
+    callback(null, proverbs);
+  } catch (error) {
+    console.error('Error getting proverbs:', error);
+    callback(error instanceof Error ? error : new Error(String(error)), []);
+  }
 };
 
 // Получение количества пословиц
@@ -156,32 +152,29 @@ export const deleteProverb = async (id: number, callback: SQLiteResultCallback) 
 };
 
 // Поиск пословиц
-export const searchProverbs = async (query: string, callback: SQLiteResultCallback) => {
+export const searchProverbs = async (query: string, callback: (error: Error | null, result: Proverb[]) => void) => {
   try {
-    // Экранируем специальные символы в поисковом запросе
-    const safeQuery = query.replace(/'/g, "''").replace(/%/g, '\\%').replace(/_/g, '\\_');
-    const searchQuery = `%${safeQuery}%`;
-    
-    // Используем параметризованный запрос
-    const sql = `SELECT * FROM proverbs 
+    const searchQuery = `%${query}%`;
+    const rows = await db.getAllAsync(`
+      SELECT * FROM proverbs 
       WHERE proverb LIKE ? 
       OR translation_ru LIKE ? 
       OR translation_kk LIKE ? 
-      OR translation_en LIKE ?`;
-      
-    const rows = await db.getAllAsync(sql, [searchQuery, searchQuery, searchQuery, searchQuery]);
-    const proverbs = (rows as SQLiteRow[]).map(row => ({
+      OR translation_en LIKE ?;
+    `, [searchQuery, searchQuery, searchQuery, searchQuery]);
+
+    const proverbs: Proverb[] = rows.map((row: any) => ({
       id: row.id,
       proverb: row.proverb,
       translation: {
         ru: row.translation_ru,
         kk: row.translation_kk,
-        en: row.translation_en,
-      },
+        en: row.translation_en
+      }
     }));
     callback(null, proverbs);
   } catch (error) {
     console.error('Error searching proverbs:', error);
-    callback(error instanceof Error ? error : new Error(String(error)), null);
+    callback(error instanceof Error ? error : new Error(String(error)), []);
   }
 }; 

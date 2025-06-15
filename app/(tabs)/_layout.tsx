@@ -46,24 +46,28 @@ export default function TabsLayout() {
           height: Platform.OS === 'ios' ? 88 : 60,
           paddingBottom: Platform.OS === 'ios' ? 28 : 8,
           paddingTop: 8,
+          backgroundColor: '#fff',
+          borderTopWidth: 1,
+          borderTopColor: '#e0e0e0',
         },
         tabBarActiveTintColor: '#007AFF',
         tabBarInactiveTintColor: '#8E8E93',
         headerShown: false,
+        tabBarShowLabel: true,
       }}
     >
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: t.home,
-          tabBarIcon: ({ color }) => <FontAwesome name="home" size={24} color={color} />,
-        }}
-      />
       <Tabs.Screen
         name="learn"
         options={{
           title: t.learn,
           tabBarIcon: ({ color }) => <FontAwesome name="book" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="home"
+        options={{
+          title: t.home,
+          tabBarIcon: ({ color }) => <FontAwesome name="home" size={28} color={color} />,
         }}
       />
       <Tabs.Screen

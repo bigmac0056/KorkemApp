@@ -157,6 +157,7 @@ export default function PhrasesScreen() {
           placeholder={t.searchPlaceholder}
           value={searchQuery}
           onChangeText={setSearchQuery}
+          placeholderTextColor="#999"
         />
 
         <View style={styles.letterNav}>

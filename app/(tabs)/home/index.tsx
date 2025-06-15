@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   menuItem: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#1976D2',
     padding: 20,
     borderRadius: 10,
     marginBottom: 15,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: '#fff',
     textAlign: 'center',
   },
 });

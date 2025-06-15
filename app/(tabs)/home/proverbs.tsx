@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  Pressable,
   ScrollView,
   TextInput,
-  Pressable,
+  TouchableOpacity,
   Animated,
   Easing,
-  Platform,
-  Alert,
-  TouchableOpacity,
+  Platform
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
 import { useFavoritesStore } from '../../../stores/favoritesStore';
+import { FontAwesome } from '@expo/vector-icons';
 import { useLanguageContext } from '../../../contexts/LanguageContext';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { AccordionGroup } from '../../../components/AccordionGroup';
 import { getAllProverbs, searchProverbs, initProverbsDatabase, Proverb } from '../../../database/proverbsDatabase';
 
 export default function ProverbsScreen() {
@@ -23,10 +23,20 @@ export default function ProverbsScreen() {
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [proverbs, setProverbs] = useState<Proverb[]>([]);
-  const t = useTranslation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const scrollRef = React.useRef<ScrollView>(null);
+  const sectionPositions = React.useRef<Record<string, number>>({});
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scrollViewRef = useRef<ScrollView>(null);
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const t = useTranslation();
+
+  // Казахский алфавит для сортировки
+  const kazakhAlphabet = [
+    'А', 'Ә', 'Б', 'В', 'Г', 'Ғ', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Қ',
+    'Л', 'М', 'Н', 'Ң', 'О', 'Ө', 'П', 'Р', 'С', 'Т', 'У', 'Ұ', 'Ү', 'Ф', 'Х',
+    'Һ', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'І', 'Ь', 'Э', 'Ю', 'Я'
+  ];
 
   useEffect(() => {
     initializeDatabase();
@@ -34,6 +44,7 @@ export default function ProverbsScreen() {
 
   const initializeDatabase = async () => {
     try {
+      setIsLoading(true);
       await new Promise<void>((resolve, reject) => {
         initProverbsDatabase((error) => {
           if (error) {
@@ -43,38 +54,85 @@ export default function ProverbsScreen() {
           }
         });
       });
-      loadProverbs();
+      await loadProverbs();
     } catch (error) {
       console.error('Error initializing database:', error);
-      Alert.alert('Error', 'Failed to initialize database');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const loadProverbs = () => {
+  const loadProverbs = useCallback(() => {
     getAllProverbs((error, result) => {
       if (error) {
         console.error('Error loading proverbs:', error);
-        Alert.alert('Error', 'Failed to load proverbs');
-      } else {
-        setProverbs(result);
+        return;
       }
+      setProverbs(result);
     });
-  };
+  }, []);
 
   useEffect(() => {
-    if (searchQuery.trim() === '') {
-      loadProverbs();
-    } else {
+    if (searchQuery) {
       searchProverbs(searchQuery, (error, result) => {
         if (error) {
           console.error('Error searching proverbs:', error);
-          Alert.alert('Error', 'Failed to search proverbs');
-        } else {
-          setProverbs(result);
+          return;
         }
+        setProverbs(result);
       });
+    } else {
+      loadProverbs();
     }
-  }, [searchQuery]);
+  }, [searchQuery, loadProverbs]);
+
+  const groupedProverbs = React.useMemo(() => {
+    const groups: Record<string, Record<string, Proverb[]>> = {};
+
+    proverbs.forEach(item => {
+      const proverbUpper = item.proverb.toUpperCase();
+      const firstLetter = proverbUpper[0] || '';
+      const twoLetters = proverbUpper.slice(0, 2) || firstLetter;
+
+      if (kazakhAlphabet.includes(firstLetter)) {
+        if (!groups[firstLetter]) groups[firstLetter] = {};
+        if (!groups[firstLetter][twoLetters]) groups[firstLetter][twoLetters] = [];
+
+        groups[firstLetter][twoLetters].push(item);
+      }
+    });
+
+    return groups;
+  }, [proverbs]);
+
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      const newOpenGroups: Record<string, boolean> = {};
+      Object.entries(groupedProverbs).forEach(([_, subgroups]) => {
+        Object.entries(subgroups).forEach(([twoLetters, items]) => {
+          const hasMatch = items.some(item =>
+            item.proverb.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.translation.ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.translation.kk.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.translation.en.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+          if (hasMatch) {
+            newOpenGroups[twoLetters] = true;
+          }
+        });
+      });
+      setOpenGroups(newOpenGroups);
+    } else {
+      setOpenGroups({});
+    }
+  }, [searchQuery, groupedProverbs]);
+
+  const scrollToLetter = (letter: string) => {
+    const y = sectionPositions.current[letter];
+    if (y !== undefined) {
+      scrollRef.current?.scrollTo({ y, animated: true });
+    }
+  };
 
   const handleScroll = (event: any) => {
     const y = event.nativeEvent.contentOffset.y;
@@ -98,20 +156,14 @@ export default function ProverbsScreen() {
   };
 
   const scrollToTop = () => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  const handleMeskPreparation = () => {
-    // TODO: Implement MESK preparation functionality
-    Alert.alert('Coming Soon', 'MESK preparation feature will be available soon!');
-  };
+  const availableLetters = Object.keys(groupedProverbs).sort((a, b) => {
+    return kazakhAlphabet.indexOf(a) - kazakhAlphabet.indexOf(b);
+  });
 
-  const handleMeskRevision = () => {
-    // TODO: Implement MESK revision functionality
-    Alert.alert('Coming Soon', 'MESK revision feature will be available soon!');
-  };
-
-  if (proverbs.length === 0) {
+  if (isLoading) {
     return (
       <View style={styles.container}>
         <Text style={styles.loadingText}>Loading proverbs...</Text>
@@ -122,69 +174,102 @@ export default function ProverbsScreen() {
   return (
     <>
       <ScrollView
-        style={styles.container}
+        contentContainerStyle={styles.container}
+        ref={scrollRef}
         onScroll={handleScroll}
         scrollEventThrottle={16}
-        ref={scrollViewRef}
       >
         <Text style={styles.title}>{t.proverbs}</Text>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.meskButton} onPress={handleMeskPreparation}>
-            <Text style={styles.meskButtonText}>{t.prepareMesk}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.meskButton} onPress={handleMeskRevision}>
-            <Text style={styles.meskButtonText}>{t.revisionMesk}</Text>
-          </TouchableOpacity>
-        </View>
-
         <TextInput
           style={styles.searchInput}
-          placeholder={t.searchProverbs}
+          placeholder={t.searchPlaceholder}
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholderTextColor="#666"
+          placeholderTextColor="#999"
         />
 
-        {proverbs.map((item) => {
-          const isFav = isFavorite(String(item.id), 'proverb');
-          return (
-            <View key={item.id} style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.proverb}>{item.proverb}</Text>
-                <Pressable
-                  onPress={() =>
-                    toggleFavorite({
-                      id: String(item.id),
-                      type: 'proverb',
-                      phrase: item.proverb,
-                      translation: `${item.translation.ru} | ${item.translation.kk} | ${item.translation.en}`,
-                    })
+        <View style={styles.letterNav}>
+          {availableLetters.map(letter => (
+            <TouchableOpacity key={letter} onPress={() => scrollToLetter(letter)}>
+              <Text style={styles.letter}>{letter}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {availableLetters.map(letter => (
+          <View
+            key={letter}
+            onLayout={event => {
+              sectionPositions.current[letter] = event.nativeEvent.layout.y;
+            }}
+          >
+            <Text style={styles.sectionTitle}>{letter}</Text>
+
+            {Object.entries(groupedProverbs[letter])
+              .sort(([a], [b]) => {
+                const aIndex = kazakhAlphabet.indexOf(a[0]) * 100 + (kazakhAlphabet.indexOf(a[1]) || 0);
+                const bIndex = kazakhAlphabet.indexOf(b[0]) * 100 + (kazakhAlphabet.indexOf(b[1]) || 0);
+                return aIndex - bIndex;
+              })
+              .map(([twoLetters, items]) => (
+                <AccordionGroup
+                  key={twoLetters}
+                  title={twoLetters}
+                  isOpen={!!openGroups[twoLetters]}
+                  onToggle={() =>
+                    setOpenGroups(prev => ({
+                      ...prev,
+                      [twoLetters]: !prev[twoLetters],
+                    }))
                   }
-                  style={styles.favoriteButton}
                 >
-                  <FontAwesome
-                    name={isFav ? 'star' : 'star-o'}
-                    size={24}
-                    color={isFav ? '#FFD700' : '#555'}
-                  />
-                </Pressable>
-              </View>
-              <Text style={styles.translation}>
-                {language === 'ru' && item.translation.ru}
-                {language === 'kz' && item.translation.kk}
-                {language === 'en' && item.translation.en}
-              </Text>
-            </View>
-          );
-        })}
+                  {items.map(item => {
+                    const isFav = isFavorite(String(item.id), 'proverb');
+                    return (
+                      <View key={item.id} style={styles.card}>
+                        <View style={styles.cardHeader}>
+                          <Text style={styles.proverb}>{item.proverb}</Text>
+                          <Pressable
+                            onPress={() =>
+                              toggleFavorite({
+                                id: String(item.id),
+                                type: 'proverb',
+                                phrase: item.proverb,
+                                translation: `${item.translation.ru} | ${item.translation.kk} | ${item.translation.en}`,
+                              })
+                            }
+                          >
+                            <FontAwesome
+                              name={isFav ? 'star' : 'star-o'}
+                              size={24}
+                              color={isFav ? '#FFD700' : '#555'}
+                            />
+                          </Pressable>
+                        </View>
+                        <Text style={styles.translation}>
+                          {language === 'ru' && item.translation.ru}
+                          {language === 'kz' && item.translation.kk}
+                          {language === 'en' && item.translation.en}
+                        </Text>
+                      </View>
+                    );
+                  })}
+                </AccordionGroup>
+              ))}
+          </View>
+        ))}
+
+        {availableLetters.length === 0 && (
+          <Text style={styles.emptyText}>{t.nothingFound}</Text>
+        )}
       </ScrollView>
 
       {Platform.OS === 'android' && showScrollTopButton && (
         <Animated.View style={[styles.scrollTopButton, { opacity: fadeAnim }]}>
-          <Pressable onPress={scrollToTop}>
+          <TouchableOpacity onPress={scrollToTop}>
             <FontAwesome name="arrow-up" size={28} color="#fff" />
-          </Pressable>
+          </TouchableOpacity>
         </Animated.View>
       )}
     </>
@@ -193,88 +278,73 @@ export default function ProverbsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
-    backgroundColor: '#fff8e1',
+    paddingBottom: 100,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#1a1a1a',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  meskButton: {
-    flex: 1,
-    backgroundColor: '#ffd54f',
-    padding: 15,
-    borderRadius: 12,
-    marginHorizontal: 5,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  meskButtonText: {
-    color: '#1a1a1a',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    marginBottom: 10,
   },
   searchInput: {
     backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 20,
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 10,
     fontSize: 16,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderColor: '#ffd54f',
+  },
+  letterNav: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 15,
+  },
+  letter: {
+    marginRight: 10,
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
   },
   card: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 15,
-    marginBottom: 15,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    borderWidth: 1,
-    borderColor: '#ffd54f',
+    backgroundColor: '#fff3e0',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
   },
   proverb: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: 'bold',
     flex: 1,
-    marginRight: 15,
-    color: '#2c3e50',
-    lineHeight: 28,
+    marginRight: 10,
   },
   translation: {
     fontSize: 16,
-    color: '#666',
-    lineHeight: 24,
+    color: '#333',
+    marginTop: 8,
+    lineHeight: 22,
   },
-  favoriteButton: {
-    padding: 8,
+  emptyText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#999',
+    marginTop: 20,
   },
   scrollTopButton: {
     position: 'absolute',
     bottom: 70,
     right: 20,
-    backgroundColor: '#ffd54f',
+    backgroundColor: '#007AFF',
     borderRadius: 30,
     padding: 14,
     elevation: 5,

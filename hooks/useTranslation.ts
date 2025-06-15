@@ -1,6 +1,6 @@
 // hooks/useTranslation.ts
 import { useLanguageContext } from '../contexts/LanguageContext';
-import translations from '../data/locales.json';
+import { translations } from '../translations';
 
 export function useTranslation() {
   const { language } = useLanguageContext();

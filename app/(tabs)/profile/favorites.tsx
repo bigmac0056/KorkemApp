@@ -10,6 +10,36 @@ export default function FavoritesScreen() {
   const t = useTranslation();
   const { language } = useLanguageContext();
 
+  // Разделяем фразеологизмы и пословицы
+  const idioms = favorites.filter(item => item.type === 'phrase');
+  const proverbs = favorites.filter(item => item.type === 'proverb');
+
+  const renderSection = (items: typeof favorites, type: 'phrase' | 'proverb') => (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>
+        {type === 'phrase' ? t.phrases : t.proverbs}
+      </Text>
+      {items.map((item) => (
+        <View 
+          key={item.id} 
+          style={[
+            styles.card,
+            { backgroundColor: type === 'phrase' ? '#E3F2FD' : '#FFF3E0' }
+          ]}
+        >
+          <Text style={styles.phrase}>{item.phrase}</Text>
+          <Text style={styles.translation}>{item.translation}</Text>
+          <Pressable
+            style={styles.starIcon}
+            onPress={() => toggleFavorite(item)}
+          >
+            <FontAwesome name="star" size={24} color="#FFD700" />
+          </Pressable>
+        </View>
+      ))}
+    </View>
+  );
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{t.favorites}</Text>
@@ -17,18 +47,10 @@ export default function FavoritesScreen() {
       {favorites.length === 0 ? (
         <Text style={styles.emptyText}>{t.favoritesEmpty}</Text>
       ) : (
-        favorites.map((item) => (
-          <View key={item.id} style={styles.card}>
-            <Text style={styles.phrase}>{item.phrase}</Text>
-            <Text style={styles.translation}>{item.translation}</Text>
-            <Pressable
-              style={styles.starIcon}
-              onPress={() => toggleFavorite(item)}
-            >
-              <FontAwesome name="star" size={24} color="#FFD700" />
-            </Pressable>
-          </View>
-        ))
+        <>
+          {renderSection(idioms, 'phrase')}
+          {renderSection(proverbs, 'proverb')}
+        </>
       )}
     </ScrollView>
   );
@@ -45,6 +67,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
+  section: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 10,
+    color: '#333',
+  },
   emptyText: {
     fontSize: 16,
     color: '#999',
@@ -52,7 +83,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   card: {
-    backgroundColor: '#f8f9fa',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
