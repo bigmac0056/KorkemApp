@@ -64,6 +64,7 @@ export default function RegisterScreen() {
     setIsLoading(true);
     try {
       console.log('Attempting to register with:', { name, email });
+      console.log('API URL for registration:', API_URL);
       const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
@@ -72,20 +73,24 @@ export default function RegisterScreen() {
         body: JSON.stringify({ name, email, password }),
       });
 
+      console.log('Registration response status:', response.status);
       const data = await response.json();
-      console.log('Registration response:', data);
+      console.log('Registration response data:', data);
       
       if (response.ok) {
+        console.log('Registration successful, attempting login...');
         await login(data.token, data.role);
         router.push('/(tabs)/home');
       } else {
+        console.log('Registration failed:', data.message);
         Alert.alert(t.error, data.message || t.registrationError);
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Registration error (client-side):', error);
       let errorMessage = t.registrationError;
       
       if (error instanceof TypeError) {
+        console.log('Network error type (registration):', error.message);
         if (error.message.includes('Network request failed')) {
           errorMessage = 'Не удалось подключиться к серверу. Пожалуйста, проверьте подключение к интернету.';
         } else if (error.message.includes('timed out')) {

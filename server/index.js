@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/korkem-app', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/korkem-app', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
