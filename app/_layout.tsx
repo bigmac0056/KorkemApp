@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState, Suspense } from 'react';
-import { Slot, useRouter, useSegments } from 'expo-router';
+import { Slot, useRouter, useSegments, Redirect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LanguageProvider } from '../contexts/LanguageContext';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
@@ -33,16 +33,9 @@ function RootLayoutInner() {
     initialize();
   }, []);
 
+  // useLayoutEffect для мобильных
   useLayoutEffect(() => {
-    if (Platform.OS === 'web') {
-      const inAuthGroup = segments[0] === 'auth';
-      const isWelcomeScreen = segments[0] === 'welcome';
-      if (!inAuthGroup && !isWelcomeScreen) {
-        router.replace('/auth/login');
-      }
-      setIsReady(true);
-      return;
-    }
+    if (Platform.OS === 'web') return;
     if (!dbReady) return;
     const initializeApp = async () => {
       try {
@@ -63,6 +56,19 @@ function RootLayoutInner() {
     };
     initializeApp();
   }, [isAuthenticated, segments, dbReady]);
+
+  // Условный редирект для web
+  if (Platform.OS === 'web') {
+    const inAuthGroup = segments[0] === 'auth';
+    const isWelcomeScreen = segments[0] === 'welcome';
+    if (!isAuthenticated && !inAuthGroup && !isWelcomeScreen) {
+      return <Redirect href="/auth/login" />;
+    }
+    if (isAuthenticated && inAuthGroup) {
+      // Если залогинен, но на странице логина/регистрации — редиректим на home
+      return <Redirect href="/(tabs)/home" />;
+    }
+  }
 
   if (initError) {
     return (

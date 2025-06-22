@@ -56,14 +56,15 @@ export default function LoginScreen() {
         console.log('[LOGIN] Login success:', response.data);
         await login(response.data.token, response.data.role);
         console.log('[LOGIN] AuthContext login called, navigating to home...');
-        
+        console.log('[LOGIN] Platform.OS:', Platform.OS);
         // Сохраняем данные пользователя в локальное хранилище
         if (response.data.user) {
           await AsyncStorage.setItem('userName', response.data.user.name || '');
           await AsyncStorage.setItem('userEmail', response.data.user.email || '');
         }
-        
+        console.log('[LOGIN] Before router.replace');
         router.replace('/(tabs)/home');
+        console.log('[LOGIN] After router.replace');
       } else {
         const errorData = response.error || t.loginError;
         console.log('[LOGIN] Login failed:', errorData);

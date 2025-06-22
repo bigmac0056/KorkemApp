@@ -29,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role = await AsyncStorage.getItem('userRole');
         }
         if (isMounted) {
+          console.log('[AUTH] checkAuth: token', token, 'role', role);
           setIsAuthenticated(!!token);
           setUserRole(role);
         }
@@ -48,6 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (token: string, role: string) => {
     try {
+      console.log('[AUTH] login called with token:', token, 'role:', role);
       if (Platform.OS === 'web') {
         localStorage.setItem('userToken', token);
         localStorage.setItem('userRole', role);
@@ -57,6 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       setIsAuthenticated(true);
       setUserRole(role);
+      console.log('[AUTH] login: setIsAuthenticated(true), setUserRole', role);
     } catch (error) {
       console.error('Error saving token:', error);
       throw error;

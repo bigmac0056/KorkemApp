@@ -70,6 +70,7 @@ export class SQLiteStorageAdapter implements StorageAdapter {
   async getPhrases(): Promise<Phrase[]> {
     const db = await this.getDb();
     const rows = await db.getAllAsync<any>('SELECT * FROM phrases ORDER BY id;');
+    console.log('[STORAGE] getPhrases rows:', rows.length);
     return rows.map(row => ({
         id: row.id,
         phrase: row.phrase,
