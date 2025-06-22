@@ -9,61 +9,73 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  Platform
+  Platform,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import { useFavoritesStore } from '../../../stores/favoritesStore';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLanguageContext } from '../../../contexts/LanguageContext';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { AccordionGroup } from '../../../components/AccordionGroup';
-import { getAllPhrases, searchPhrases, Phrase } from '../../../database/database';
+import { getPhrases, searchPhrases, initDatabase, Phrase } from '../../../database/database';
+import { kazakhAlphabet } from '../../../constants/alphabet';
+import { useRouter } from 'expo-router';
+import { translations } from '../../../translations';
 
 export default function PhrasesScreen() {
   const { language } = useLanguageContext();
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [phrases, setPhrases] = useState<Phrase[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const scrollRef = React.useRef<ScrollView>(null);
   const sectionPositions = React.useRef<Record<string, number>>({});
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const notificationAnim = React.useRef(new Animated.Value(0)).current;
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const router = useRouter();
   const t = useTranslation();
 
-  // Казахский алфавит для сортировки
-  const kazakhAlphabet = [
-    'А', 'Ә', 'Б', 'В', 'Г', 'Ғ', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Қ',
-    'Л', 'М', 'Н', 'Ң', 'О', 'Ө', 'П', 'Р', 'С', 'Т', 'У', 'Ұ', 'Ү', 'Ф', 'Х',
-    'Һ', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'І', 'Ь', 'Э', 'Ю', 'Я'
-  ];
+  const initializeDatabase = async () => {
+    try {
+      setIsLoading(true);
+      await loadPhrases();
+    } catch (error) {
+      console.error('Error initializing database:', error);
+      Alert.alert(t.error, 'Failed to initialize database. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const loadPhrases = useCallback(() => {
-    getAllPhrases((error, result) => {
-      if (error) {
-        console.error('Error loading phrases:', error);
-        return;
-      }
+  const loadPhrases = useCallback(async () => {
+    try {
+      const result = await getPhrases();
       setPhrases(result);
-    });
+    } catch (error) {
+      Alert.alert(t.error, 'Failed to load phrases. Please try again.');
+    }
+  }, [t.error]);
+
+  useEffect(() => {
+    initializeDatabase();
   }, []);
 
   useEffect(() => {
-    loadPhrases();
-  }, [loadPhrases]);
-
-  useEffect(() => {
     if (searchQuery) {
-      searchPhrases(searchQuery, (error, result) => {
-        if (error) {
-          console.error('Error searching phrases:', error);
-          return;
-        }
+      searchPhrases(searchQuery).then(result => {
         setPhrases(result);
+      }).catch(error => {
+        Alert.alert(t.error, 'Failed to search phrases. Please try again.');
       });
     } else {
       loadPhrases();
     }
-  }, [searchQuery, loadPhrases]);
+  }, [searchQuery, loadPhrases, t.error]);
 
   const groupedPhrases = React.useMemo(() => {
     const groups: Record<string, Record<string, Phrase[]>> = {};
@@ -117,19 +129,27 @@ export default function PhrasesScreen() {
     const y = event.nativeEvent.contentOffset.y;
     if (y > 300 && !showScrollTopButton) {
       setShowScrollTopButton(true);
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      }).start();
+      fadeAnim.stopAnimation((value) => {
+        if (value === 0) {
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 300,
+            easing: Easing.out(Easing.ease),
+            useNativeDriver: true,
+          }).start();
+        }
+      });
     } else if (y <= 300 && showScrollTopButton) {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        setShowScrollTopButton(false);
+      fadeAnim.stopAnimation((value) => {
+        if (value === 1) {
+          Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }).start(() => {
+            setShowScrollTopButton(false);
+          });
+        }
       });
     }
   };
@@ -141,6 +161,52 @@ export default function PhrasesScreen() {
   const availableLetters = Object.keys(groupedPhrases).sort((a, b) => {
     return kazakhAlphabet.indexOf(a) - kazakhAlphabet.indexOf(b);
   });
+
+  const handleToggleFavorite = (phrase: any) => {
+    const isCurrentlyFavorite = isFavorite(String(phrase.id), 'phrase');
+
+    toggleFavorite({
+      id: String(phrase.id),
+      type: 'phrase',
+      phrase: phrase.phrase,
+      translation: `${phrase.translation.ru} | ${phrase.translation.kk} | ${phrase.translation.en}`,
+    });
+
+    setNotificationMessage(isCurrentlyFavorite ? t.removedFromFavorites : t.addedToFavorites);
+    setShowNotification(true);
+    
+    // Animate in
+    Animated.timing(notificationAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.cubic),
+    }).start();
+
+    // Animate out after delay
+    setTimeout(() => {
+      Animated.timing(notificationAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+        easing: Easing.in(Easing.cubic),
+      }).start(() => {
+        setShowNotification(false);
+      });
+    }, 2700);
+  };
+
+  const navigateToFavorites = () => {
+    router.push('/(tabs)/profile/favorites' as any);
+  };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -202,14 +268,7 @@ export default function PhrasesScreen() {
                         <View style={styles.cardHeader}>
                           <Text style={styles.phrase}>{item.phrase}</Text>
                           <Pressable
-                            onPress={() =>
-                              toggleFavorite({
-                                id: String(item.id),
-                                type: 'phrase',
-                                phrase: item.phrase,
-                                translation: `${item.translation.ru} | ${item.translation.kk} | ${item.translation.en}`,
-                              })
-                            }
+                            onPress={() => handleToggleFavorite(item)}
                           >
                             <FontAwesome
                               name={isFav ? 'star' : 'star-o'}
@@ -236,11 +295,52 @@ export default function PhrasesScreen() {
         )}
       </ScrollView>
 
-      {Platform.OS === 'android' && showScrollTopButton && (
-        <Animated.View style={[styles.scrollTopButton, { opacity: fadeAnim }]}>
+      {showScrollTopButton && (
+        <Animated.View
+          style={[
+            styles.scrollTopButton,
+            {
+              opacity: fadeAnim,
+              transform: [
+                {
+                  translateY: fadeAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [50, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
           <TouchableOpacity onPress={scrollToTop}>
-            <FontAwesome name="arrow-up" size={28} color="#fff" />
+            <FontAwesome name="arrow-up" size={24} color="#fff" />
           </TouchableOpacity>
+        </Animated.View>
+      )}
+
+      {showNotification && (
+        <Animated.View 
+          style={[
+            styles.notification,
+            {
+              opacity: notificationAnim,
+              transform: [{ translateY: notificationAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [100, 0]
+              })}],
+              backgroundColor: notificationMessage === t.removedFromFavorites ? '#FF4444' : '#4CAF50'
+            }
+          ]}
+        >
+          <Text style={styles.notificationText}>{notificationMessage}</Text>
+          {notificationMessage === t.addedToFavorites && (
+            <TouchableOpacity 
+              style={styles.notificationButton}
+              onPress={navigateToFavorites}
+            >
+              <Text style={styles.notificationButtonText}>{t.favorites}</Text>
+            </TouchableOpacity>
+          )}
         </Animated.View>
       )}
     </>
@@ -319,5 +419,51 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     padding: 14,
     elevation: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notification: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: '#4CAF50',
+    padding: 15,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  notificationText: {
+    color: 'white',
+    flex: 1,
+    marginRight: 10,
+  },
+  notificationButton: {
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 4,
+  },
+  notificationButtonText: {
+    color: '#4CAF50',
+    fontWeight: 'bold',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

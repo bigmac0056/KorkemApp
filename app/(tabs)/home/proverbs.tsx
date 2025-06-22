@@ -9,14 +9,19 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  Platform
+  Platform,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import { useFavoritesStore } from '../../../stores/favoritesStore';
 import { FontAwesome } from '@expo/vector-icons';
 import { useLanguageContext } from '../../../contexts/LanguageContext';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { AccordionGroup } from '../../../components/AccordionGroup';
-import { getAllProverbs, searchProverbs, initProverbsDatabase, Proverb } from '../../../database/proverbsDatabase';
+import { getAllProverbs, initDatabase, Proverb } from '../../../database/database';
+import { kazakhAlphabet } from '../../../constants/alphabet';
+import { useRouter } from 'expo-router';
+import { translations } from '../../../translations';
 
 export default function ProverbsScreen() {
   const { language } = useLanguageContext();
@@ -29,58 +34,46 @@ export default function ProverbsScreen() {
   const sectionPositions = React.useRef<Record<string, number>>({});
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const router = useRouter();
   const t = useTranslation();
-
-  // Казахский алфавит для сортировки
-  const kazakhAlphabet = [
-    'А', 'Ә', 'Б', 'В', 'Г', 'Ғ', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Қ',
-    'Л', 'М', 'Н', 'Ң', 'О', 'Ө', 'П', 'Р', 'С', 'Т', 'У', 'Ұ', 'Ү', 'Ф', 'Х',
-    'Һ', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'І', 'Ь', 'Э', 'Ю', 'Я'
-  ];
-
-  useEffect(() => {
-    initializeDatabase();
-  }, []);
 
   const initializeDatabase = async () => {
     try {
       setIsLoading(true);
-      await new Promise<void>((resolve, reject) => {
-        initProverbsDatabase((error) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve();
-          }
-        });
-      });
       await loadProverbs();
     } catch (error) {
       console.error('Error initializing database:', error);
+      Alert.alert(t.error, 'Failed to initialize database. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadProverbs = useCallback(() => {
-    getAllProverbs((error, result) => {
-      if (error) {
-        console.error('Error loading proverbs:', error);
-        return;
-      }
+  const loadProverbs = useCallback(async () => {
+    try {
+      const result = await getAllProverbs();
       setProverbs(result);
-    });
+    } catch (error) {
+      console.error('Error loading proverbs:', error);
+      Alert.alert(t.error, 'Failed to load proverbs. Please try again.');
+    }
+  }, []);
+
+  useEffect(() => {
+    initializeDatabase();
   }, []);
 
   useEffect(() => {
     if (searchQuery) {
-      searchProverbs(searchQuery, (error, result) => {
-        if (error) {
-          console.error('Error searching proverbs:', error);
-          return;
-        }
-        setProverbs(result);
-      });
+      const filteredProverbs = proverbs.filter(proverb => 
+        proverb.proverb.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        proverb.translation.ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        proverb.translation.kk.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        proverb.translation.en.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setProverbs(filteredProverbs);
     } else {
       loadProverbs();
     }
@@ -163,6 +156,44 @@ export default function ProverbsScreen() {
     return kazakhAlphabet.indexOf(a) - kazakhAlphabet.indexOf(b);
   });
 
+  const handleToggleFavorite = (proverb: Proverb) => {
+    const isCurrentlyFavorite = isFavorite(String(proverb.id), 'proverb');
+
+    toggleFavorite({
+      id: String(proverb.id),
+      type: 'proverb',
+      phrase: proverb.proverb,
+      translation: `${proverb.translation.ru} | ${proverb.translation.kk} | ${proverb.translation.en}`,
+    });
+
+    setNotificationMessage(isCurrentlyFavorite ? t.removedFromFavorites : t.addedToFavorites);
+    setShowNotification(true);
+    
+    // Animate in
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.cubic),
+    }).start();
+
+    // Animate out after delay
+    setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+        easing: Easing.in(Easing.cubic),
+      }).start(() => {
+        setShowNotification(false);
+      });
+    }, 2700);
+  };
+
+  const navigateToFavorites = () => {
+    router.push('/(tabs)/profile/favorites' as any);
+  };
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -232,12 +263,7 @@ export default function ProverbsScreen() {
                           <Text style={styles.proverb}>{item.proverb}</Text>
                           <Pressable
                             onPress={() =>
-                              toggleFavorite({
-                                id: String(item.id),
-                                type: 'proverb',
-                                phrase: item.proverb,
-                                translation: `${item.translation.ru} | ${item.translation.kk} | ${item.translation.en}`,
-                              })
+                              handleToggleFavorite(item)
                             }
                           >
                             <FontAwesome
@@ -270,6 +296,32 @@ export default function ProverbsScreen() {
           <TouchableOpacity onPress={scrollToTop}>
             <FontAwesome name="arrow-up" size={28} color="#fff" />
           </TouchableOpacity>
+        </Animated.View>
+      )}
+
+      {showNotification && (
+        <Animated.View 
+          style={[
+            styles.notification,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: fadeAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [100, 0]
+              })}],
+              backgroundColor: notificationMessage === t.removedFromFavorites ? '#FF4444' : '#4CAF50'
+            }
+          ]}
+        >
+          <Text style={styles.notificationText}>{notificationMessage}</Text>
+          {notificationMessage === t.addedToFavorites && (
+            <TouchableOpacity 
+              style={styles.notificationButton}
+              onPress={navigateToFavorites}
+            >
+              <Text style={styles.notificationButtonText}>{t.favorites}</Text>
+            </TouchableOpacity>
+          )}
         </Animated.View>
       )}
     </>
@@ -354,5 +406,40 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginTop: 20,
+  },
+  notification: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: '#4CAF50',
+    padding: 15,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  notificationText: {
+    color: 'white',
+    flex: 1,
+    marginRight: 10,
+  },
+  notificationButton: {
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 4,
+  },
+  notificationButtonText: {
+    color: '#4CAF50',
+    fontWeight: 'bold',
   },
 });

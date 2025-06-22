@@ -15,13 +15,27 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLanguageContext } from '../../contexts/LanguageContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAuth } from '../../contexts/AuthContext';
-import { API_URL } from '../../constants/config';
+import { apiClient } from '../../utils/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface RegisterResponse {
+  token: string;
+  role: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+}
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { language } = useLanguageContext();
@@ -63,42 +77,28 @@ export default function RegisterScreen() {
 
     setIsLoading(true);
     try {
-      console.log('Attempting to register with:', { name, email });
-      console.log('API URL for registration:', API_URL);
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
+      const response = await apiClient.post<RegisterResponse>('/api/auth/register', {
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password,
       });
 
-      console.log('Registration response status:', response.status);
-      const data = await response.json();
-      console.log('Registration response data:', data);
-      
-      if (response.ok) {
-        console.log('Registration successful, attempting login...');
-        await login(data.token, data.role);
+      if (response.data && response.status === 201) {
+        await login(response.data.token, response.data.role);
+        
+        // Сохраняем данные пользователя в локальное хранилище
+        if (response.data.user) {
+          await AsyncStorage.setItem('userName', response.data.user.name || '');
+          await AsyncStorage.setItem('userEmail', response.data.user.email || '');
+        }
+        
         router.push('/(tabs)/home');
       } else {
-        console.log('Registration failed:', data.message);
-        Alert.alert(t.error, data.message || t.registrationError);
+        Alert.alert(t.error, response.error || t.registrationError);
       }
     } catch (error) {
-      console.error('Registration error (client-side):', error);
-      let errorMessage = t.registrationError;
-      
-      if (error instanceof TypeError) {
-        console.log('Network error type (registration):', error.message);
-        if (error.message.includes('Network request failed')) {
-          errorMessage = 'Не удалось подключиться к серверу. Пожалуйста, проверьте подключение к интернету.';
-        } else if (error.message.includes('timed out')) {
-          errorMessage = 'Превышено время ожидания ответа от сервера. Пожалуйста, попробуйте позже.';
-        }
-      }
-      
-      Alert.alert(t.error, errorMessage);
+      console.error('Registration error:', error);
+      Alert.alert(t.error, error instanceof Error ? error.message : t.registrationError);
     } finally {
       setIsLoading(false);
     }
@@ -125,6 +125,7 @@ export default function RegisterScreen() {
               value={name}
               onChangeText={setName}
               autoCapitalize="words"
+              autoCorrect={false}
               editable={!isLoading}
             />
           </View>
@@ -139,6 +140,7 @@ export default function RegisterScreen() {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              autoCorrect={false}
               editable={!isLoading}
             />
           </View>
@@ -151,9 +153,17 @@ export default function RegisterScreen() {
               placeholderTextColor="#666"
               value={password}
               onChangeText={setPassword}
-              secureTextEntry
+              secureTextEntry={!showPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
               editable={!isLoading}
             />
+            <TouchableOpacity
+              style={styles.eyeButton}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={20} color="#666" />
+            </TouchableOpacity>
           </View>
 
           <View style={styles.inputContainer}>
@@ -164,9 +174,17 @@ export default function RegisterScreen() {
               placeholderTextColor="#666"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
-              secureTextEntry
+              secureTextEntry={!showConfirmPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
               editable={!isLoading}
             />
+            <TouchableOpacity
+              style={styles.eyeButton}
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              <FontAwesome name={showConfirmPassword ? "eye" : "eye-slash"} size={20} color="#666" />
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity 
@@ -263,5 +281,8 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: '#007AFF',
     fontSize: 16,
+  },
+  eyeButton: {
+    padding: 5,
   },
 }); 

@@ -7,5 +7,95 @@
         "kk": "Ер — елінің қорғаны",
         "en": "A man is the protector of his people"
       }
+    },
+    {
+      "id": 2,
+      "proverb": "Гүл өз жерінде ғана – гүл, адам өз отанында ғана - адам.",
+      "translation": {
+        "ru": "Цветок лишь на своей поляне – цветок, человек лишь на родине – человек.",
+        "kk": "Гүл өз жерінде ғана – гүл, адам өз отанында ғана - адам.",
+        "en": "A flower is only a flower in its own field, a person is only a person in their homeland."
+      }
+    },
+    {
+      "id": 3,
+      "proverb": "Отанның жуасы да тәтті.",
+      "translation": {
+        "ru": "И лук на Родине сладок.",
+        "kk": "Отанның жуасы да тәтті.",
+        "en": "Even wild onions taste sweet in the homeland."
+      }
+    },
+    {
+      "id": 4,
+      "proverb": "Алқапсыз тау болмайды, Отансыз ер жоқ.",
+      "translation": {
+        "ru": "Без долины гор не бывает, без Родины мужчины нет.",
+        "kk": "Алқапсыз тау болмайды, Отансыз ер жоқ.",
+        "en": "There are no mountains without valleys, no hero without a homeland."
+      }
+    },
+    {
+      "id": 5,
+      "proverb": "Отан отбасынан басталады.",
+      "translation": {
+        "ru": "Родина с семьи начинается.",
+        "kk": "Отан отбасынан басталады.",
+        "en": "The homeland begins with the family."
+      }
+    },
+    {
+      "id": 6,
+      "proverb": "Торғай екеш торғай да өз ұясын қорғайды.",
+      "translation": {
+        "ru": "Воробей и тот своё гнездо охраняет.",
+        "kk": "Торғай екеш торғай да өз ұясын қорғайды.",
+        "en": "Even a sparrow defends its nest."
+      }
+    },
+    {
+      "id": 7,
+      "proverb": "Теңіздің арғы жағы жылырақ, ал бізде жарығырақ.",
+      "translation": {
+        "ru": "За морем теплее, а у нас светлее.",
+        "kk": "Теңіздің арғы жағы жылырақ, ал бізде жарығырақ.",
+        "en": "Beyond the sea it may be warmer, but here it is brighter."
+      }
+    },
+    {
+      "id": 8,
+      "proverb": "Құс қайда ұшса да, өз ұясын біледі.",
+      "translation": {
+        "ru": "Где птица не летает, а своё гнездо знает.",
+        "kk": "Құс қайда ұшса да, өз ұясын біледі.",
+        "en": "No matter where a bird flies, it knows its nest."
+      }
+    },
+    {
+      "id": 9,
+      "proverb": "Тамырсыз жусан да өспейді.",
+      "translation": {
+        "ru": "Без корня и полынь не растёт.",
+        "kk": "Тамырсыз жусан да өспейді.",
+        "en": "Even wormwood cannot grow without roots."
+      }
+    },
+    {
+      "id": 10,
+      "proverb": "Өзіңнің ғажайып Отаныңды ұмытпа, өз туған жеріңе ешқашан соқпай өтпе.",
+      "translation": {
+        "ru": "Свою Родину прекрасную никогда не забывай, места, где ты родился, никогда не обходи.",
+        "kk": "Өзіңнің ғажайып Отаныңды ұмытпа, өз туған жеріңе ешқашан соқпай өтпе.",
+        "en": "Never forget your wonderful homeland, never pass by your birthplace."
+      }
+    },
+    {
+      "id": 11,
+      "proverb": "Отаныңның әр ағашы күлімдеп тұрады.",
+      "translation": {
+        "ru": "На своей родине каждое дерево улыбается.",
+        "kk": "Отаныңның әр ағашы күлімдеп тұрады.",
+        "en": "Every tree in your homeland seems to smile at you."
+      }
     }
   ]

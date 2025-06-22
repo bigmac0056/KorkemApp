@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
-import SQLite from './sqlite';
+import * as SQLite from 'expo-sqlite';
+import { SQLiteDatabase, SQLiteTransaction, Phrase } from './types';
 
 // Типы данных
 export interface Translation {
@@ -8,152 +9,305 @@ export interface Translation {
   en: string;
 }
 
-export interface Phrase {
-  id: number;
-  phrase: string;
-  translation: Translation;
-}
-
 export interface Proverb {
   id: number;
   proverb: string;
   translation: Translation;
 }
 
-// Адаптер для хранения данных
-class StorageAdapter {
-  private db: any;
-  private isWeb: boolean;
+// Интерфейс для адаптера хранилища
+export interface StorageAdapter {
+  initDatabase(): Promise<void>;
+  getPhrases(): Promise<Phrase[]>;
+  searchPhrases(query: string): Promise<Phrase[]>;
+  loadPhrases(phrases: Phrase[]): Promise<void>;
+  clearPhrases(): Promise<void>;
+  getAllProverbs(): Promise<Proverb[]>;
+  addProverb(proverb: Proverb): Promise<void>;
+  searchProverbs(query: string): Promise<Proverb[]>;
+  updateProverb(proverb: Proverb): Promise<void>;
+  deleteProverb(id: number): Promise<void>;
+  clearProverbs(): Promise<void>;
+  clearDatabase(): Promise<void>;
+}
+
+export class SQLiteStorageAdapter implements StorageAdapter {
+  private db: SQLite.SQLiteDatabase;
 
   constructor() {
-    this.isWeb = Platform.OS === 'web';
-    if (!this.isWeb && SQLite) {
-      this.db = SQLite.openDatabaseSync('korkem.db');
-    }
+    this.db = SQLite.openDatabaseSync('korkem.db');
   }
 
-  // Инициализация базы данных
-  async init() {
-    if (this.isWeb) {
-      // Для веб используем localStorage
-      if (!localStorage.getItem('phrases')) {
-        localStorage.setItem('phrases', JSON.stringify([]));
-      }
-      if (!localStorage.getItem('proverbs')) {
-        localStorage.setItem('proverbs', JSON.stringify([]));
-      }
-    } else if (this.db) {
-      // Для мобильных устройств используем SQLite
+  async initDatabase(): Promise<void> {
+    try {
       await this.db.execAsync(`
         CREATE TABLE IF NOT EXISTS phrases (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id INTEGER PRIMARY KEY,
           phrase TEXT NOT NULL,
           translation_ru TEXT NOT NULL,
           translation_kk TEXT NOT NULL,
           translation_en TEXT NOT NULL
         );
-      `);
 
-      await this.db.execAsync(`
         CREATE TABLE IF NOT EXISTS proverbs (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id INTEGER PRIMARY KEY,
           proverb TEXT NOT NULL,
           translation_ru TEXT NOT NULL,
           translation_kk TEXT NOT NULL,
           translation_en TEXT NOT NULL
         );
       `);
+    } catch (error) {
+      console.error('Error initializing database:', error);
+      throw error;
     }
   }
 
-  // Методы для работы с фразами
-  async getAllPhrases(): Promise<Phrase[]> {
-    if (this.isWeb) {
-      return JSON.parse(localStorage.getItem('phrases') || '[]');
-    } else if (this.db) {
-      const rows = await this.db.getAllAsync('SELECT * FROM phrases');
+  async getPhrases(): Promise<Phrase[]> {
+    try {
+      const statement = await this.db.prepareAsync('SELECT * FROM phrases ORDER BY id;');
+      const result = await statement.executeAsync();
+      const rows = await result.getAllAsync();
+      
       return rows.map((row: any) => ({
         id: row.id,
         phrase: row.phrase,
         translation: {
           ru: row.translation_ru,
           kk: row.translation_kk,
-          en: row.translation_en,
-        },
+          en: row.translation_en
+        }
       }));
-    }
-    return [];
-  }
-
-  async addPhrase(phrase: Omit<Phrase, 'id'>): Promise<void> {
-    if (this.isWeb) {
-      const phrases = JSON.parse(localStorage.getItem('phrases') || '[]');
-      const newId = phrases.length > 0 ? Math.max(...phrases.map((p: Phrase) => p.id)) + 1 : 1;
-      phrases.push({ ...phrase, id: newId });
-      localStorage.setItem('phrases', JSON.stringify(phrases));
-    } else if (this.db) {
-      await this.db.execAsync(
-        'INSERT INTO phrases (phrase, translation_ru, translation_kk, translation_en) VALUES (?, ?, ?, ?)',
-        [phrase.phrase, phrase.translation.ru, phrase.translation.kk, phrase.translation.en]
-      );
+    } catch (error) {
+      console.error('Error getting phrases:', error);
+      throw error;
     }
   }
 
-  // Методы для работы с пословицами
+  async searchPhrases(query: string): Promise<Phrase[]> {
+    try {
+      const searchQuery = `%${query}%`;
+      const statement = await this.db.prepareAsync(`
+        SELECT * FROM phrases 
+        WHERE phrase LIKE ? 
+        OR translation_ru LIKE ? 
+        OR translation_kk LIKE ? 
+        OR translation_en LIKE ?
+        ORDER BY id;
+      `);
+      
+      const result = await statement.executeAsync([searchQuery, searchQuery, searchQuery, searchQuery]);
+      const rows = await result.getAllAsync();
+      
+      return rows.map((row: any) => ({
+        id: row.id,
+        phrase: row.phrase,
+        translation: {
+          ru: row.translation_ru,
+          kk: row.translation_kk,
+          en: row.translation_en
+        }
+      }));
+    } catch (error) {
+      console.error('Error searching phrases:', error);
+      throw error;
+    }
+  }
+
+  async loadPhrases(phrases: Phrase[]): Promise<void> {
+    try {
+      // Start a transaction
+      await this.db.execAsync('BEGIN TRANSACTION;');
+      
+      // Clear the table
+      await this.db.execAsync('DELETE FROM phrases;');
+      
+      // Try to reset the auto-increment counter, but don't fail if table doesn't exist
+      try {
+        await this.db.execAsync('DELETE FROM sqlite_sequence WHERE name="phrases";');
+      } catch (error) {
+        console.log('sqlite_sequence table not found, skipping reset');
+      }
+      
+      // Insert new data
+      for (const phrase of phrases) {
+        const statement = await this.db.prepareAsync(
+          'INSERT OR REPLACE INTO phrases (id, phrase, translation_ru, translation_kk, translation_en) VALUES (?, ?, ?, ?, ?);'
+        );
+        await statement.executeAsync([
+          phrase.id,
+          phrase.phrase,
+          phrase.translation.ru,
+          phrase.translation.kk,
+          phrase.translation.en
+        ]);
+      }
+      
+      // Commit the transaction
+      await this.db.execAsync('COMMIT;');
+    } catch (error) {
+      // Rollback on error
+      await this.db.execAsync('ROLLBACK;');
+      console.error('Error loading phrases:', error);
+      throw error;
+    }
+  }
+
   async getAllProverbs(): Promise<Proverb[]> {
-    if (this.isWeb) {
-      return JSON.parse(localStorage.getItem('proverbs') || '[]');
-    } else if (this.db) {
-      const rows = await this.db.getAllAsync('SELECT * FROM proverbs');
+    try {
+      const statement = await this.db.prepareAsync('SELECT * FROM proverbs ORDER BY id;');
+      const result = await statement.executeAsync();
+      const rows = await result.getAllAsync();
+      
       return rows.map((row: any) => ({
         id: row.id,
         proverb: row.proverb,
         translation: {
           ru: row.translation_ru,
           kk: row.translation_kk,
-          en: row.translation_en,
-        },
+          en: row.translation_en
+        }
       }));
+    } catch (error) {
+      console.error('Error getting proverbs:', error);
+      throw error;
     }
-    return [];
   }
 
-  async addProverb(proverb: Omit<Proverb, 'id'>): Promise<void> {
-    if (this.isWeb) {
-      const proverbs = JSON.parse(localStorage.getItem('proverbs') || '[]');
-      const newId = proverbs.length > 0 ? Math.max(...proverbs.map((p: Proverb) => p.id)) + 1 : 1;
-      proverbs.push({ ...proverb, id: newId });
-      localStorage.setItem('proverbs', JSON.stringify(proverbs));
-    } else if (this.db) {
-      await this.db.execAsync(
-        'INSERT INTO proverbs (proverb, translation_ru, translation_kk, translation_en) VALUES (?, ?, ?, ?)',
-        [proverb.proverb, proverb.translation.ru, proverb.translation.kk, proverb.translation.en]
+  async addProverb(proverb: Proverb): Promise<void> {
+    try {
+      const statement = await this.db.prepareAsync(
+        'INSERT INTO proverbs (id, proverb, translation_ru, translation_kk, translation_en) VALUES (?, ?, ?, ?, ?);'
       );
+      await statement.executeAsync([
+        proverb.id,
+        proverb.proverb,
+        proverb.translation.ru,
+        proverb.translation.kk,
+        proverb.translation.en
+      ]);
+    } catch (error) {
+      console.error('Error adding proverb:', error);
+      throw error;
     }
-  }
-
-  // Поиск
-  async searchPhrases(query: string): Promise<Phrase[]> {
-    const phrases = await this.getAllPhrases();
-    const searchQuery = query.toLowerCase();
-    return phrases.filter(phrase => 
-      phrase.phrase.toLowerCase().includes(searchQuery) ||
-      phrase.translation.ru.toLowerCase().includes(searchQuery) ||
-      phrase.translation.kk.toLowerCase().includes(searchQuery) ||
-      phrase.translation.en.toLowerCase().includes(searchQuery)
-    );
   }
 
   async searchProverbs(query: string): Promise<Proverb[]> {
-    const proverbs = await this.getAllProverbs();
-    const searchQuery = query.toLowerCase();
-    return proverbs.filter(proverb => 
-      proverb.proverb.toLowerCase().includes(searchQuery) ||
-      proverb.translation.ru.toLowerCase().includes(searchQuery) ||
-      proverb.translation.kk.toLowerCase().includes(searchQuery) ||
-      proverb.translation.en.toLowerCase().includes(searchQuery)
-    );
+    try {
+      const searchQuery = `%${query}%`;
+      const statement = await this.db.prepareAsync(`
+        SELECT * FROM proverbs 
+        WHERE proverb LIKE ? 
+        OR translation_ru LIKE ? 
+        OR translation_kk LIKE ? 
+        OR translation_en LIKE ?
+        ORDER BY id;
+      `);
+      
+      const result = await statement.executeAsync([searchQuery, searchQuery, searchQuery, searchQuery]);
+      const rows = await result.getAllAsync();
+      
+      return rows.map((row: any) => ({
+        id: row.id,
+        proverb: row.proverb,
+        translation: {
+          ru: row.translation_ru,
+          kk: row.translation_kk,
+          en: row.translation_en
+        }
+      }));
+    } catch (error) {
+      console.error('Error searching proverbs:', error);
+      throw error;
+    }
+  }
+
+  async updateProverb(proverb: Proverb): Promise<void> {
+    try {
+      const statement = await this.db.prepareAsync(`
+        UPDATE proverbs 
+        SET proverb = ?, translation_ru = ?, translation_kk = ?, translation_en = ?
+        WHERE id = ?;
+      `);
+      await statement.executeAsync([
+        proverb.proverb,
+        proverb.translation.ru,
+        proverb.translation.kk,
+        proverb.translation.en,
+        proverb.id
+      ]);
+    } catch (error) {
+      console.error('Error updating proverb:', error);
+      throw error;
+    }
+  }
+
+  async deleteProverb(id: number): Promise<void> {
+    try {
+      const statement = await this.db.prepareAsync('DELETE FROM proverbs WHERE id = ?;');
+      await statement.executeAsync([id]);
+    } catch (error) {
+      console.error('Error deleting proverb:', error);
+      throw error;
+    }
+  }
+
+  async clearProverbs(): Promise<void> {
+    try {
+      await this.db.execAsync('DELETE FROM proverbs;');
+      
+      // Try to reset auto-increment counters, but don't fail if table doesn't exist
+      try {
+        await this.db.execAsync('DELETE FROM sqlite_sequence WHERE name="proverbs";');
+      } catch (error) {
+        console.log('sqlite_sequence table not found, skipping reset');
+      }
+      
+      console.log('Proverbs cleared successfully');
+    } catch (error) {
+      console.error('Error clearing proverbs:', error);
+      throw error;
+    }
+  }
+
+  async clearDatabase(): Promise<void> {
+    try {
+      await this.db.execAsync('DELETE FROM phrases;');
+      await this.db.execAsync('DELETE FROM proverbs;');
+      
+      // Try to reset auto-increment counters, but don't fail if table doesn't exist
+      try {
+        await this.db.execAsync('DELETE FROM sqlite_sequence WHERE name="phrases";');
+        await this.db.execAsync('DELETE FROM sqlite_sequence WHERE name="proverbs";');
+      } catch (error) {
+        console.log('sqlite_sequence table not found, skipping reset');
+      }
+      
+      console.log('Database cleared successfully');
+    } catch (error) {
+      console.error('Error clearing database:', error);
+      throw error;
+    }
+  }
+
+  async clearPhrases(): Promise<void> {
+    try {
+      await this.db.execAsync('DELETE FROM phrases;');
+      
+      // Try to reset auto-increment counters, but don't fail if table doesn't exist
+      try {
+        await this.db.execAsync('DELETE FROM sqlite_sequence WHERE name="phrases";');
+      } catch (error) {
+        console.log('sqlite_sequence table not found, skipping reset');
+      }
+      
+      console.log('Phrases cleared successfully');
+    } catch (error) {
+      console.error('Error clearing phrases:', error);
+      throw error;
+    }
   }
 }
 
-export const storage = new StorageAdapter(); 
+// Create and export a single instance of the storage adapter
+export const storage = new SQLiteStorageAdapter(); 

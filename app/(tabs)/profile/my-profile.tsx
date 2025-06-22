@@ -36,29 +36,67 @@ export default function MyProfile() {
 
   const loadUserProfile = async () => {
     try {
+      setIsLoading(true);
       const token = await AsyncStorage.getItem('userToken');
       if (!token) {
+        console.log('No token found, redirecting to login');
         router.replace('/auth/login');
         return;
       }
 
+      console.log('Loading user profile with token:', token.substring(0, 20) + '...');
+      
       const response = await fetch(`${API_URL}/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 
+      console.log('Profile response status:', response.status);
+
       if (response.ok) {
         const data = await response.json();
-        setName(data.user.name);
-        setEmail(data.user.email);
-        setAvatar(data.user.avatar);
+        console.log('Profile data received:', data);
+        
+        if (data.user) {
+          setName(data.user.name || '');
+          setEmail(data.user.email || '');
+          setAvatar(data.user.avatar || null);
+        } else {
+          console.log('No user data in response');
+          // Попробуем загрузить данные из локального хранилища
+          const storedName = await AsyncStorage.getItem('userName');
+          const storedEmail = await AsyncStorage.getItem('userEmail');
+          if (storedName) setName(storedName);
+          if (storedEmail) setEmail(storedEmail);
+        }
       } else {
+        const errorData = await response.text();
+        console.log('Profile load error:', errorData);
         Alert.alert(t.error, t.profileLoadError);
+        
+        // Попробуем загрузить данные из локального хранилища
+        const storedName = await AsyncStorage.getItem('userName');
+        const storedEmail = await AsyncStorage.getItem('userEmail');
+        if (storedName) setName(storedName);
+        if (storedEmail) setEmail(storedEmail);
       }
     } catch (error) {
       console.error('Error loading profile:', error);
       Alert.alert(t.error, t.profileLoadError);
+      
+      // Попробуем загрузить данные из локального хранилища
+      try {
+        const storedName = await AsyncStorage.getItem('userName');
+        const storedEmail = await AsyncStorage.getItem('userEmail');
+        if (storedName) setName(storedName);
+        if (storedEmail) setEmail(storedEmail);
+      } catch (storageError) {
+        console.error('Error loading from storage:', storageError);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 

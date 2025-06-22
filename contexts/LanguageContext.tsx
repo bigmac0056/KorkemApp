@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { create } from 'zustand';
 
 export type Language = 'ru' | 'kz' | 'en';
 
@@ -16,24 +15,16 @@ const defaultContext: LanguageContextType = {
 
 const LanguageContext = createContext<LanguageContextType>(defaultContext);
 
-interface LanguageStore {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-}
-
-export const useLanguageStore = create<LanguageStore>((set) => ({
-  language: 'ru',
-  setLanguage: (lang) => set({ language: lang }),
-}));
-
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('ru');
 
   useEffect(() => {
+    let isMounted = true;
+    
     const loadLanguage = async () => {
       try {
         const savedLanguage = await AsyncStorage.getItem('language');
-        if (savedLanguage && ['ru', 'kz', 'en'].includes(savedLanguage)) {
+        if (isMounted && savedLanguage && ['ru', 'kz', 'en'].includes(savedLanguage)) {
           setLanguageState(savedLanguage as Language);
         }
       } catch (error) {
@@ -42,19 +33,28 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     };
 
     loadLanguage();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const setLanguage = async (lang: Language) => {
+  const setLanguage = useCallback(async (lang: Language) => {
     try {
       await AsyncStorage.setItem('language', lang);
       setLanguageState(lang);
     } catch (error) {
       console.error('Error saving language:', error);
     }
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    language,
+    setLanguage
+  }), [language, setLanguage]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

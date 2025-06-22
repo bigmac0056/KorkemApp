@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LanguageProvider } from '../contexts/LanguageContext';
@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { View, ActivityIndicator } from 'react-native';
 import { API_URL } from '../constants/config';
+import { initDatabase } from '../database/database';
 
 function RootLayoutInner() {
   const [isReady, setIsReady] = useState(false);
@@ -15,7 +16,30 @@ function RootLayoutInner() {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    checkFirstLaunch();
+    let isMounted = true;
+    
+    const initializeApp = async () => {
+      try {
+        // Инициализируем базу данных
+        await initDatabase();
+        
+        // Проверяем первый запуск
+        if (isMounted) {
+          await checkFirstLaunch();
+        }
+      } catch (error) {
+        console.error('Error initializing app:', error);
+        if (isMounted) {
+          await checkFirstLaunch();
+        }
+      }
+    };
+
+    initializeApp();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const checkFirstLaunch = async () => {
@@ -29,7 +53,6 @@ function RootLayoutInner() {
       }
       setIsReady(true);
     } catch (error) {
-      console.error('Error checking first launch:', error);
       setIsFirstLaunch(false);
       setIsReady(true);
     }
@@ -61,7 +84,15 @@ function RootLayoutInner() {
     );
   }
 
-  return <Slot />;
+  return (
+    <Suspense fallback={
+      <View style={{ flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    }>
+      <Slot />
+    </Suspense>
+  );
 }
 
 export default function RootLayout() {

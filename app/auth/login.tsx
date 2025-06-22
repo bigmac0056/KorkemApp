@@ -15,12 +15,24 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLanguageContext } from '../../contexts/LanguageContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAuth } from '../../contexts/AuthContext';
-import { API_URL } from '../../constants/config';
+import { apiClient } from '../../utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface LoginResponse {
+  token: string;
+  role: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+}
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { language } = useLanguageContext();
   const t = useTranslation();
@@ -34,51 +46,43 @@ export default function LoginScreen() {
 
     setIsLoading(true);
     try {
-      console.log('Attempting to login with:', { email });
-      console.log('API URL:', API_URL);
-      
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await apiClient.post<LoginResponse>('/api/auth/login', { 
+        email: email.trim().toLowerCase(), 
+        password 
       });
 
-      console.log('Response status:', response.status);
-      const data = await response.json();
-      console.log('Login response:', data);
-      
-      if (response.ok) {
-        console.log('Login successful, navigating to home...');
-        await login(data.token, data.role);
+      if (response.data && response.status === 200) {
+        await login(response.data.token, response.data.role);
+        
+        // Сохраняем данные пользователя в локальное хранилище
+        if (response.data.user) {
+          await AsyncStorage.setItem('userName', response.data.user.name || '');
+          await AsyncStorage.setItem('userEmail', response.data.user.email || '');
+        }
+        
         router.replace('/(tabs)/home');
       } else {
-        console.log('Login failed:', data.message);
-        Alert.alert(t.error, data.message || t.loginError);
+        Alert.alert(t.error, response.error || t.loginError);
       }
     } catch (error) {
       console.error('Login error:', error);
-      let errorMessage = t.loginError;
-      
-      if (error instanceof TypeError) {
-        console.log('Network error type:', error.message);
-        if (error.message.includes('Network request failed')) {
-          errorMessage = 'Не удалось подключиться к серверу. Пожалуйста, проверьте подключение к интернету.';
-        } else if (error.message.includes('timed out')) {
-          errorMessage = 'Превышено время ожидания ответа от сервера. Пожалуйста, попробуйте позже.';
-        }
-      }
-      
-      Alert.alert(t.error, errorMessage);
+      Alert.alert(t.error, error instanceof Error ? error.message : t.loginError);
     } finally {
       setIsLoading(false);
     }
   };
 
   const validateForm = () => {
-    if (!email || !password) {
-      Alert.alert(t.error, 'Please enter both email and password');
+    if (!email.trim()) {
+      Alert.alert(t.error, t.emailRequired);
+      return false;
+    }
+    if (!email.includes('@')) {
+      Alert.alert(t.error, t.invalidEmail);
+      return false;
+    }
+    if (!password) {
+      Alert.alert(t.error, t.passwordRequired);
       return false;
     }
     return true;
@@ -106,6 +110,8 @@ export default function LoginScreen() {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              autoCorrect={false}
+              editable={!isLoading}
             />
           </View>
 
@@ -117,17 +123,35 @@ export default function LoginScreen() {
               placeholderTextColor="#666"
               value={password}
               onChangeText={setPassword}
-              secureTextEntry
+              secureTextEntry={!showPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              editable={!isLoading}
             />
+            <TouchableOpacity
+              style={styles.eyeButton}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={20} color="#666" />
+            </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <TouchableOpacity 
+            style={[styles.loginButton, isLoading && styles.disabledButton]} 
+            onPress={handleLogin}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
             <Text style={styles.loginButtonText}>{t.login}</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.registerButton}
             onPress={() => router.push('/auth/register')}
+            disabled={isLoading}
           >
             <Text style={styles.registerButtonText}>{t.createAccount}</Text>
           </TouchableOpacity>
@@ -203,5 +227,11 @@ const styles = StyleSheet.create({
   registerButtonText: {
     color: '#007AFF',
     fontSize: 16,
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
+  },
+  eyeButton: {
+    padding: 10,
   },
 }); 

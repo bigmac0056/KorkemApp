@@ -9,14 +9,14 @@ export default function AboutScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.section}>
-        <Text style={styles.title}>Korkem App</Text>
+        <Text style={styles.title}>KorkemApp</Text>
         <Text style={styles.version}>Version 1.0.0</Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t.aboutApp}</Text>
         <Text style={styles.description}>
-          Korkem App - это образовательное приложение для подготовки к МЭСК, изучения казахского языка и культуры.
+          KorkemApp - это образовательное приложение для подготовки к МЭСК, изучения казахского языка и культуры.
         </Text>
       </View>
 
@@ -31,7 +31,7 @@ export default function AboutScreen() {
         <Text style={styles.sectionTitle}>Контакты</Text>
         <Text style={styles.description}>
           По всем вопросам обращайтесь:
-          {'\n'}Email: support@korkem.app
+          {'\n'}Email: elubajernar291@gmail.com
         </Text>
       </View>
     </ScrollView>

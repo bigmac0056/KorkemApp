@@ -142,6 +142,13 @@ export default function ProfileScreen() {
           <Text style={styles.menuText}>{t.aboutApp}</Text>
         </TouchableOpacity>
 
+        {userRole === 'developer' && (
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/(tabs)/profile/server-test')}>
+            <FontAwesome name="server" size={24} color="#007AFF" />
+            <Text style={styles.menuText}>Server Test</Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity style={[styles.menuItem, styles.logoutButton]} onPress={handleLogout}>
           <FontAwesome name="sign-out" size={24} color="#FF3B30" />
           <Text style={[styles.menuText, styles.logoutText]}>{t.logout}</Text>

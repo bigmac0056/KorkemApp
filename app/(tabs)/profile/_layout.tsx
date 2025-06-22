@@ -30,6 +30,18 @@ export default function ProfileLayout() {
           title: t.contactUs,
         }}
       />
+      <Stack.Screen
+        name="my-profile"
+        options={{
+          title: t.myProfile,
+        }}
+      />
+      <Stack.Screen
+        name="about"
+        options={{
+          title: t.aboutApp,
+        }}
+      />
     </Stack>
   );
 }

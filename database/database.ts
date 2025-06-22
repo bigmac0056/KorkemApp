@@ -1,5 +1,10 @@
-import { storage, Phrase } from './storage';
+import { storage } from './storage';
 import phrasesData from '../data/phrases.json';
+import proverbsData from '../data/proverbs.json';
+import { Proverb } from './types';
+
+// Экспортируем тип Proverb для использования в других файлах
+export type { Proverb } from './types';
 
 // Тип для фразы, совместимый с PhrasesScreen.tsx
 export type Phrase = {
@@ -27,41 +32,87 @@ interface CountRow {
   count: number;
 }
 
-// Инициализация базы данных
-export const initDatabase = async (callback: SQLiteCallback) => {
+// Функция для очистки базы данных
+export async function clearDatabase() {
   try {
-    await storage.init();
-    
-    // Загружаем начальные данные, если база пуста
-    const phrases = await storage.getAllPhrases();
-    if (phrases.length === 0) {
-      for (const phrase of phrasesData) {
-        await storage.addPhrase(phrase);
-      }
-    }
-    
-    callback(null);
+    await storage.clearDatabase();
   } catch (error) {
-    console.error('Database initialization failed:', error);
-    callback(error instanceof Error ? error : new Error(String(error)));
+    console.error('Error clearing database:', error);
+    throw error;
   }
-};
+}
 
-// Получение всех фраз
-export const getAllPhrases = async (callback: SQLiteResultCallback) => {
+// Функция для инициализации базы данных
+export async function initDatabase() {
   try {
-    const phrases = await storage.getAllPhrases();
-    callback(null, phrases);
+    // Инициализация базы данных (создание таблиц)
+    await storage.initDatabase();
+
+    // --- Загрузка Фраз ---
+    const phrases = await storage.getPhrases();
+    console.log(`Current phrases in database: ${phrases.length}`);
+    
+    // Принудительно перезагружаем фразы для обновления данных
+    console.log('Loading initial phrases data...');
+    if (Array.isArray(phrasesData)) {
+        console.log(`Found ${phrasesData.length} phrases in JSON file`);
+        // Очищаем существующие фразы
+        await storage.clearPhrases();
+        // Добавляем все фразы заново
+        const transformedPhrases = phrasesData.map((item: any) => ({
+            id: item.id,
+            phrase: item.phrase,
+            translation: {
+                ru: item.translation.ru,
+                kk: item.translation.kk,
+                en: item.translation.en
+            }
+        }));
+        await storage.loadPhrases(transformedPhrases);
+        console.log('Initial phrases data loaded successfully');
+    } else {
+        console.log('No phrases data found in JSON file');
+    }
+
+    // --- Загрузка Пословиц ---
+    const proverbs = await storage.getAllProverbs();
+    console.log(`Current proverbs in database: ${proverbs.length}`);
+    
+    // Принудительно перезагружаем пословицы для обновления данных
+    console.log('Loading initial proverbs data...');
+    if (Array.isArray(proverbsData)) {
+        console.log(`Found ${proverbsData.length} proverbs in JSON file`);
+        // Очищаем существующие пословицы
+        await storage.clearProverbs();
+        // Добавляем все пословицы заново
+        for (const proverb of proverbsData) {
+            await storage.addProverb(proverb);
+        }
+        console.log('Initial proverbs data loaded successfully');
+    } else {
+        console.log('No proverbs data found in JSON file');
+    }
+
+  } catch (error) {
+    console.error('Error initializing database:', error);
+    throw error;
+  }
+}
+
+// Функция для получения всех фраз
+export async function getPhrases(): Promise<Phrase[]> {
+  try {
+    return await storage.getPhrases();
   } catch (error) {
     console.error('Error getting phrases:', error);
-    callback(error instanceof Error ? error : new Error(String(error)), null);
+    throw error;
   }
-};
+}
 
 // Получение количества фраз
 export const getPhraseCount = async (callback: SQLiteResultCallback) => {
   try {
-    const phrases = await storage.getAllPhrases();
+    const phrases = await storage.getPhrases();
     callback(null, phrases.length);
   } catch (error) {
     console.error('Error getting phrase count:', error);
@@ -72,7 +123,7 @@ export const getPhraseCount = async (callback: SQLiteResultCallback) => {
 // Добавление новой фразы
 export const addPhrase = async (phrase: Omit<Phrase, 'id'>, callback: SQLiteResultCallback) => {
   try {
-    await storage.addPhrase(phrase);
+    await storage.loadPhrases([{ ...phrase, id: Date.now() }]);
     callback(null, { success: true });
   } catch (error) {
     console.error('Error adding phrase:', error);
@@ -83,9 +134,15 @@ export const addPhrase = async (phrase: Omit<Phrase, 'id'>, callback: SQLiteResu
 // Обновление фразы
 export const updatePhrase = async (phrase: Phrase, callback: SQLiteResultCallback) => {
   try {
-    const sql = `UPDATE phrases SET phrase = '${escapeString(phrase.phrase)}', translation_ru = '${escapeString(phrase.translation.ru)}', translation_kk = '${escapeString(phrase.translation.kk)}', translation_en = '${escapeString(phrase.translation.en)}' WHERE id = ${phrase.id}`;
-    await db.execAsync(sql);
-    callback(null, { success: true });
+    const phrases = await storage.getPhrases();
+    const index = phrases.findIndex(p => p.id === phrase.id);
+    if (index !== -1) {
+      phrases[index] = phrase;
+      await storage.loadPhrases(phrases);
+      callback(null, { success: true });
+    } else {
+      throw new Error('Phrase not found');
+    }
   } catch (error) {
     console.error('Error updating phrase:', error);
     callback(error instanceof Error ? error : new Error(String(error)), null);
@@ -95,7 +152,9 @@ export const updatePhrase = async (phrase: Phrase, callback: SQLiteResultCallbac
 // Удаление фразы
 export const deletePhrase = async (id: number, callback: SQLiteResultCallback) => {
   try {
-    await db.execAsync(`DELETE FROM phrases WHERE id = ${id}`);
+    const phrases = await storage.getPhrases();
+    const filteredPhrases = phrases.filter(p => p.id !== id);
+    await storage.loadPhrases(filteredPhrases);
     callback(null, { success: true });
   } catch (error) {
     console.error('Error deleting phrase:', error);
@@ -103,13 +162,98 @@ export const deletePhrase = async (id: number, callback: SQLiteResultCallback) =
   }
 };
 
-// Поиск фраз
-export const searchPhrases = async (query: string, callback: SQLiteResultCallback) => {
+// Функция для поиска фраз
+export async function searchPhrases(query: string): Promise<Phrase[]> {
   try {
-    const phrases = await storage.searchPhrases(query);
-    callback(null, phrases);
+    return await storage.searchPhrases(query);
   } catch (error) {
     console.error('Error searching phrases:', error);
-    callback(error instanceof Error ? error : new Error(String(error)), null);
+    throw error;
   }
-};
+}
+
+// === ФУНКЦИИ ДЛЯ ПОСЛОВИЦ ===
+
+// Функция для получения всех пословиц
+export async function getAllProverbs(): Promise<Proverb[]> {
+  try {
+    return await storage.getAllProverbs();
+  } catch (error) {
+    console.error('Error getting proverbs:', error);
+    throw error;
+  }
+}
+
+// Функция для поиска пословиц
+export async function searchProverbs(query: string): Promise<Proverb[]> {
+  try {
+    return await storage.searchProverbs(query);
+  } catch (error) {
+    console.error('Error searching proverbs:', error);
+    throw error;
+  }
+}
+
+// Функция для добавления пословицы
+export async function addProverb(proverb: Omit<Proverb, 'id'>): Promise<void> {
+  try {
+    await storage.addProverb({ ...proverb, id: Date.now() });
+  } catch (error) {
+    console.error('Error adding proverb:', error);
+    throw error;
+  }
+}
+
+// Функция для обновления пословицы
+export async function updateProverb(proverb: Proverb): Promise<void> {
+  try {
+    await storage.updateProverb(proverb);
+  } catch (error) {
+    console.error('Error updating proverb:', error);
+    throw error;
+  }
+}
+
+// Функция для удаления пословицы
+export async function deleteProverb(id: number): Promise<void> {
+  try {
+    await storage.deleteProverb(id);
+  } catch (error) {
+    console.error('Error deleting proverb:', error);
+    throw error;
+  }
+}
+
+// Функция для получения количества пословиц
+export async function getProverbCount(): Promise<number> {
+  try {
+    const proverbs = await storage.getAllProverbs();
+    return proverbs.length;
+  } catch (error) {
+    console.error('Error getting proverb count:', error);
+    throw error;
+  }
+}
+
+// Функция для инициализации только пословиц (для обратной совместимости)
+export async function initProverbsDatabase(): Promise<void> {
+  try {
+    await storage.initDatabase();
+    
+    const proverbs = await storage.getAllProverbs();
+    if (proverbs.length === 0) {
+      console.log('Loading initial proverbs data...');
+      if (Array.isArray(proverbsData)) {
+        for (const proverb of proverbsData) {
+          await storage.addProverb(proverb);
+        }
+      }
+      console.log('Initial proverbs data loaded successfully');
+    } else {
+      console.log(`Database already contains ${proverbs.length} proverbs`);
+    }
+  } catch (error) {
+    console.error('Error initializing proverbs database:', error);
+    throw error;
+  }
+}

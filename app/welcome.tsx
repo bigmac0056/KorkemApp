@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
@@ -55,8 +56,11 @@ export default function WelcomeScreen() {
             <TouchableOpacity
               style={[styles.button, styles.registerButton]}
               onPress={() => {
-                console.log('Register button pressed');
-                router.push('/auth/register');
+                try {
+                  router.push('/auth/register');
+                } catch (error) {
+                  Alert.alert('Error', 'Failed to navigate to register screen');
+                }
               }}
             >
               <Text style={styles.buttonText}>
@@ -71,8 +75,11 @@ export default function WelcomeScreen() {
             <TouchableOpacity
               style={[styles.button, styles.loginButton]}
               onPress={() => {
-                console.log('Login button pressed');
-                router.push('/auth/login');
+                try {
+                  router.push('/auth/login');
+                } catch (error) {
+                  Alert.alert('Error', 'Failed to navigate to login screen');
+                }
               }}
             >
               <Text style={[styles.buttonText, styles.loginButtonText]}>
@@ -89,6 +96,11 @@ export default function WelcomeScreen() {
     </View>
   );
 }
+
+// Add metadata for the route
+WelcomeScreen.meta = {
+  title: 'Welcome',
+};
 
 const styles = StyleSheet.create({
   container: {

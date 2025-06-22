@@ -3,7 +3,7 @@ export const translations = {
     home: 'Главная',
     learn: 'Учить',
     profile: 'Профиль',
-    phrases: 'Фразы',
+    phrases: 'Фразеологизмы',
     proverbs: 'Пословицы',
     myProfile: 'Мой профиль',
     favorites: 'Избранное',
@@ -88,19 +88,21 @@ export const translations = {
     questions: 'вопросов',
     prepareForMesk: 'Подготовка к МЭСК',
     revisionBeforeMesk: 'Повторение перед МЭСК',
-    searchProverbs: 'Поиск пословиц'
+    searchProverbs: 'Поиск пословиц',
+    addedToFavorites: 'Успешно добавлено в избранное',
+    removedFromFavorites: 'Удалено из избранного'
   },
   kz: {
     home: 'Басты бет',
     learn: 'Оқу',
     profile: 'Профиль',
-    phrases: 'Фразалар',
+    phrases: 'Тұрақты тіркестер',
     proverbs: 'Мақал-мәтелдер',
     myProfile: 'Менің профилім',
     favorites: 'Таңдаулылар',
     translator: 'Аудармашы',
     chooseLanguage: 'Тілді таңдаңыз',
-    currentLanguage: 'Ағымдағы тіл',
+    currentLanguage: 'Таңдалған тіл',
     tests: 'Тесттер',
     welcomeBack: 'Қош келдіңіз!',
     email: 'Email',
@@ -119,10 +121,10 @@ export const translations = {
     logout: 'Шығу',
     logoutError: 'Шығу қатесі',
     contactUs: 'Бізбен байланысу',
-    shareApp: 'Қолданбаны бөлісу',
-    rateApp: 'Қолданбаны бағалау',
+    shareApp: 'Қосымшамен бөлісу',
+    rateApp: 'Қосымшаны бағалау',
     clearCache: 'Кэшті тазалау',
-    aboutApp: 'Қолданба туралы',
+    aboutApp: 'Қосымша жайлы',
     cacheCleared: 'Кэш тазаланды',
     cacheClearError: 'Кэшті тазалау қатесі',
     comingSoon: 'Жақында',
@@ -179,7 +181,9 @@ export const translations = {
     questions: 'сұрақ',
     prepareForMesk: 'МЭСК-ке дайындық',
     revisionBeforeMesk: 'МЭСК-ке дейін қайталау',
-    searchProverbs: 'Мақал-мәтел іздеу'
+    searchProverbs: 'Мақал-мәтел іздеу',
+    addedToFavorites: 'Таңдаулыларға сәтті қосылды',
+    removedFromFavorites: 'Таңдаулылардан жойылды'
   },
   en: {
     home: 'Home',
@@ -270,6 +274,8 @@ export const translations = {
     questions: 'questions',
     prepareForMesk: 'Prepare for MESK',
     revisionBeforeMesk: 'Revision before MESK',
-    searchProverbs: 'Search proverbs'
+    searchProverbs: 'Search proverbs',
+    addedToFavorites: 'Successfully added to favorites',
+    removedFromFavorites: 'Removed from favorites'
   }
 }; 
