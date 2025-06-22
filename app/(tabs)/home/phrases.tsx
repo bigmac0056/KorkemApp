@@ -41,12 +41,15 @@ export default function PhrasesScreen() {
   const router = useRouter();
   const t = useTranslation();
 
+  const setPhrasesWithLog = (data: Phrase[]) => {
+    setPhrases(data);
+  };
+
   const initializeDatabase = async () => {
     try {
       setIsLoading(true);
       await loadPhrases();
     } catch (error) {
-      console.error('Error initializing database:', error);
       Alert.alert(t.error, 'Failed to initialize database. Please try again.');
     } finally {
       setIsLoading(false);
@@ -54,34 +57,50 @@ export default function PhrasesScreen() {
   };
 
   const loadPhrases = useCallback(async () => {
+    if (Platform.OS === 'web') {
+      setPhrasesWithLog(phrasesData as Phrase[]);
+      return;
+    }
     try {
       const result = await getPhrases();
-      setPhrases(result);
+      setPhrasesWithLog(result);
     } catch (error) {
       Alert.alert(t.error, 'Failed to load phrases. Please try again.');
     }
   }, [t.error]);
 
   useEffect(() => {
-    if (Platform.OS === 'web') {
-      setPhrases(phrasesData as Phrase[]);
-      setIsLoading(false);
-    } else {
-      loadPhrases();
-    }
-  }, []);
-
-  useEffect(() => {
     if (searchQuery) {
-      searchPhrases(searchQuery).then(result => {
-        setPhrases(result);
-      }).catch(error => {
-        Alert.alert(t.error, 'Failed to search phrases. Please try again.');
-      });
+      if (Platform.OS === 'web') {
+        const filtered = (phrasesData as Phrase[]).filter(item =>
+          item.phrase.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.translation.ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.translation.kk.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.translation.en.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setPhrasesWithLog(filtered);
+      } else {
+        searchPhrases(searchQuery).then(result => {
+          setPhrasesWithLog(result);
+        }).catch(error => {
+          Alert.alert(t.error, 'Failed to search phrases. Please try again.');
+        });
+      }
     } else {
       loadPhrases();
     }
   }, [searchQuery, loadPhrases, t.error]);
+
+  useEffect(() => {
+    if (Platform.OS === 'web') {
+      setPhrasesWithLog(phrasesData as Phrase[]);
+      setIsLoading(false);
+    } else {
+      loadPhrases().then(() => {
+        setIsLoading(false);
+      });
+    }
+  }, []);
 
   const groupedPhrases = React.useMemo(() => {
     const groups: Record<string, Record<string, Phrase[]>> = {};
