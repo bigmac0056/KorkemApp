@@ -85,7 +85,7 @@ export default function RegisterScreen() {
 
       if (response.data && response.status === 201) {
         await login(response.data.token, response.data.role);
-        
+      
         // Сохраняем данные пользователя в локальное хранилище
         if (response.data.user) {
           await AsyncStorage.setItem('userName', response.data.user.name || '');

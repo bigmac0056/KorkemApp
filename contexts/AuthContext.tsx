@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -16,11 +17,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let isMounted = true;
-    
     const checkAuth = async () => {
       try {
-        const token = await AsyncStorage.getItem('userToken');
-        const role = await AsyncStorage.getItem('userRole');
+        let token: string | null = null;
+        let role: string | null = null;
+        if (Platform.OS === 'web') {
+          token = localStorage.getItem('userToken');
+          role = localStorage.getItem('userRole');
+        } else {
+          token = await AsyncStorage.getItem('userToken');
+          role = await AsyncStorage.getItem('userRole');
+        }
         if (isMounted) {
           setIsAuthenticated(!!token);
           setUserRole(role);
@@ -33,9 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     };
-
     checkAuth();
-
     return () => {
       isMounted = false;
     };
@@ -43,8 +48,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (token: string, role: string) => {
     try {
-      await AsyncStorage.setItem('userToken', token);
-      await AsyncStorage.setItem('userRole', role);
+      if (Platform.OS === 'web') {
+        localStorage.setItem('userToken', token);
+        localStorage.setItem('userRole', role);
+      } else {
+        await AsyncStorage.setItem('userToken', token);
+        await AsyncStorage.setItem('userRole', role);
+      }
       setIsAuthenticated(true);
       setUserRole(role);
     } catch (error) {
@@ -55,8 +65,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await AsyncStorage.removeItem('userToken');
-      await AsyncStorage.removeItem('userRole');
+      if (Platform.OS === 'web') {
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('userRole');
+      } else {
+        await AsyncStorage.removeItem('userToken');
+        await AsyncStorage.removeItem('userRole');
+      }
       setIsAuthenticated(false);
       setUserRole(null);
     } catch (error) {

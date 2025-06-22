@@ -1,82 +1,79 @@
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useLayoutEffect, useState, Suspense } from 'react';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LanguageProvider } from '../contexts/LanguageContext';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Text, StyleSheet, Platform } from 'react-native';
 import { API_URL } from '../constants/config';
 import { initDatabase } from '../database/database';
 
 function RootLayoutInner() {
   const [isReady, setIsReady] = useState(false);
-  const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+  const [dbReady, setDbReady] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
   const segments = useSegments();
   const router = useRouter();
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    let isMounted = true;
-    
-    const initializeApp = async () => {
-      try {
-        // Инициализируем базу данных
-        await initDatabase();
-        
-        // Проверяем первый запуск
-        if (isMounted) {
-          await checkFirstLaunch();
-        }
-      } catch (error) {
-        console.error('Error initializing app:', error);
-        if (isMounted) {
-          await checkFirstLaunch();
-        }
-      }
-    };
-
-    initializeApp();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const checkFirstLaunch = async () => {
-    try {
-      const hasLaunched = await AsyncStorage.getItem('hasLaunched');
-      if (hasLaunched === null) {
-        await AsyncStorage.setItem('hasLaunched', 'true');
-        setIsFirstLaunch(true);
-      } else {
-        setIsFirstLaunch(false);
-      }
+    if (Platform.OS === 'web') {
+      setDbReady(true);
       setIsReady(true);
-    } catch (error) {
-      setIsFirstLaunch(false);
-      setIsReady(true);
-    }
-  };
-
-  useEffect(() => {
-    if (!isReady) return;
-    
-    if (isFirstLaunch) {
-      router.replace('/welcome');
       return;
     }
+    const initialize = async () => {
+      try {
+        await initDatabase();
+        setDbReady(true);
+      } catch (error: any) {
+        setInitError(error.message || 'Unknown DB error');
+      }
+    };
+    initialize();
+  }, []);
 
-    const inAuthGroup = segments[0] === 'auth';
-    const isWelcomeScreen = segments[0] === 'welcome';
-    
-    if (!isAuthenticated && !inAuthGroup && !isWelcomeScreen) {
-      router.push('/auth/login');
-    } else if (isAuthenticated && inAuthGroup) {
-      router.push('/(tabs)/home');
+  useLayoutEffect(() => {
+    if (Platform.OS === 'web') {
+      const inAuthGroup = segments[0] === 'auth';
+      const isWelcomeScreen = segments[0] === 'welcome';
+      if (!inAuthGroup && !isWelcomeScreen) {
+        router.replace('/auth/login');
+      }
+      setIsReady(true);
+      return;
     }
-  }, [isAuthenticated, segments, isReady, isFirstLaunch]);
+    if (!dbReady) return;
+    const initializeApp = async () => {
+      try {
+        const hasLaunched = await AsyncStorage.getItem('hasLaunched');
+        const inAuthGroup = segments[0] === 'auth';
+        const isWelcomeScreen = segments[0] === 'welcome';
+        if (hasLaunched === null) {
+          await AsyncStorage.setItem('hasLaunched', 'true');
+          router.replace('/welcome');
+        } else if (!isAuthenticated && !inAuthGroup && !isWelcomeScreen) {
+          router.replace('/auth/login');
+        }
+      } catch (error: any) {
+        setInitError(error.message || 'An unknown error occurred during initialization.');
+      } finally {
+        setIsReady(true);
+      }
+    };
+    initializeApp();
+  }, [isAuthenticated, segments, dbReady]);
 
-  if (!isReady) {
+  if (initError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorTitle}>Fatal Error</Text>
+        <Text style={styles.errorMessage}>{initError}</Text>
+      </View>
+    );
+  }
+
+  if (!isReady || !dbReady) {
     return (
       <View style={{ flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="#007AFF" />
@@ -94,6 +91,28 @@ function RootLayoutInner() {
     </Suspense>
   );
 }
+
+const styles = StyleSheet.create({
+  errorContainer: {
+    flex: 1,
+    backgroundColor: '#1c1c1e',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FF3B30',
+    marginBottom: 15,
+  },
+  errorMessage: {
+    fontSize: 16,
+    color: '#f2f2f7',
+    textAlign: 'center',
+    fontFamily: 'monospace',
+  },
+});
 
 export default function RootLayout() {
   return (

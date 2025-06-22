@@ -46,13 +46,16 @@ export default function LoginScreen() {
 
     setIsLoading(true);
     try {
+      console.log('[LOGIN] Sending login request:', email, password);
       const response = await apiClient.post<LoginResponse>('/api/auth/login', { 
         email: email.trim().toLowerCase(), 
         password 
       });
-
+      console.log('[LOGIN] Response status:', response.status);
       if (response.data && response.status === 200) {
+        console.log('[LOGIN] Login success:', response.data);
         await login(response.data.token, response.data.role);
+        console.log('[LOGIN] AuthContext login called, navigating to home...');
         
         // Сохраняем данные пользователя в локальное хранилище
         if (response.data.user) {
@@ -62,11 +65,13 @@ export default function LoginScreen() {
         
         router.replace('/(tabs)/home');
       } else {
-        Alert.alert(t.error, response.error || t.loginError);
+        const errorData = response.error || t.loginError;
+        console.log('[LOGIN] Login failed:', errorData);
+        Alert.alert(t.error, errorData);
       }
     } catch (error) {
-      console.error('Login error:', error);
-      Alert.alert(t.error, error instanceof Error ? error.message : t.loginError);
+      console.error('[LOGIN] Login error:', error);
+      Alert.alert(t.error, t.loginError);
     } finally {
       setIsLoading(false);
     }

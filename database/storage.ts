@@ -23,6 +23,7 @@ export interface StorageAdapter {
   loadPhrases(phrases: Phrase[]): Promise<void>;
   clearPhrases(): Promise<void>;
   getAllProverbs(): Promise<Proverb[]>;
+  loadProverbs(proverbs: Proverb[]): Promise<void>;
   addProverb(proverb: Proverb): Promise<void>;
   searchProverbs(query: string): Promise<Proverb[]>;
   updateProverb(proverb: Proverb): Promise<void>;
@@ -32,43 +33,33 @@ export interface StorageAdapter {
 }
 
 export class SQLiteStorageAdapter implements StorageAdapter {
-  private db: SQLite.SQLiteDatabase | null = null;
+  private static db: SQLite.SQLiteDatabase | null = null;
 
   private async getDb(): Promise<SQLite.SQLiteDatabase> {
-    if (this.db) {
-      return this.db;
+    if (SQLiteStorageAdapter.db) {
+      return SQLiteStorageAdapter.db;
     }
-
-    if (Platform.OS === 'web') {
-      // Для веба используем асинхронное открытие
-      this.db = await SQLite.openDatabaseAsync('korkem.db');
-    } else {
-      // Для нативных платформ
-      this.db = SQLite.openDatabaseSync('korkem.db');
-    }
-    
-    await this.initTables(this.db);
-    return this.db;
+    SQLiteStorageAdapter.db = await SQLite.openDatabaseAsync('korkem.db');
+    await this.initTables(SQLiteStorageAdapter.db);
+    return SQLiteStorageAdapter.db;
   }
 
   private async initTables(db: SQLite.SQLiteDatabase): Promise<void> {
-    await db.execAsync(`
-      PRAGMA journal_mode = WAL;
-      CREATE TABLE IF NOT EXISTS phrases (
-        id INTEGER PRIMARY KEY NOT NULL,
-        phrase TEXT NOT NULL,
-        translation_ru TEXT,
-        translation_kk TEXT,
-        translation_en TEXT
-      );
-      CREATE TABLE IF NOT EXISTS proverbs (
-        id INTEGER PRIMARY KEY NOT NULL,
-        proverb TEXT NOT NULL,
-        translation_ru TEXT,
-        translation_kk TEXT,
-        translation_en TEXT
-      );
-    `);
+    // await db.execAsync(`PRAGMA journal_mode = WAL;`); // Удалено для совместимости с web
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS phrases (
+      id INTEGER PRIMARY KEY NOT NULL,
+      phrase TEXT NOT NULL,
+      translation_ru TEXT,
+      translation_kk TEXT,
+      translation_en TEXT
+    );`);
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS proverbs (
+      id INTEGER PRIMARY KEY NOT NULL,
+      proverb TEXT NOT NULL,
+      translation_ru TEXT,
+      translation_kk TEXT,
+      translation_en TEXT
+    );`);
   }
   
   async initDatabase(): Promise<void> {
@@ -144,10 +135,18 @@ export class SQLiteStorageAdapter implements StorageAdapter {
     }));
   }
 
+  async loadProverbs(proverbs: Proverb[]): Promise<void> {
+    const db = await this.getDb();
+    for (const proverb of proverbs) {
+      console.log('[DB] Inserting proverb:', JSON.stringify(proverb));
+      await this.addProverb(proverb);
+    }
+  }
+
   async addProverb(proverb: Proverb): Promise<void> {
     const db = await this.getDb();
     await db.runAsync(
-      'INSERT INTO proverbs (id, proverb, translation_ru, translation_kk, translation_en) VALUES (?, ?, ?, ?, ?);',
+      'INSERT OR REPLACE INTO proverbs (id, proverb, translation_ru, translation_kk, translation_en) VALUES (?, ?, ?, ?, ?);',
       [proverb.id, proverb.proverb, proverb.translation.ru, proverb.translation.kk, proverb.translation.en]
     );
   }

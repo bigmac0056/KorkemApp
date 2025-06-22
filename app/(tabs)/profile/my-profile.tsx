@@ -28,7 +28,7 @@ export default function MyProfile() {
   const router = useRouter();
   const { language } = useLanguageContext();
   const t = useTranslation();
-  const { userRole } = useAuth();
+  const { userRole, logout } = useAuth();
 
   useEffect(() => {
     loadUserProfile();
@@ -159,6 +159,16 @@ export default function MyProfile() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.replace('/auth/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+      Alert.alert(t.error, 'An error occurred during logout.');
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -201,22 +211,21 @@ export default function MyProfile() {
             style={[styles.input, styles.inputDisabled]}
             value={email}
             editable={false}
-            placeholder={t.email}
+            keyboardType="email-address"
+            placeholder={t.enterEmail}
           />
         </View>
 
-        <TouchableOpacity
-          style={[styles.editButton, isEditing && styles.saveButton]}
-          onPress={handleEditProfile}
-          disabled={isLoading}
-        >
+        <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
           {isLoading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.editButtonText}>
-              {isEditing ? t.save : t.edit}
-            </Text>
+            <Text style={styles.buttonText}>{isEditing ? t.saveChanges : t.editProfile}</Text>
           )}
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogout}>
+          <Text style={[styles.buttonText, styles.logoutButtonText]}>{t.logout}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -281,7 +290,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   label: {
     fontSize: 16,
@@ -299,19 +308,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     color: '#666',
   },
-  editButton: {
+  button: {
+    marginTop: 20,
     backgroundColor: '#007AFF',
-    padding: 15,
+    paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 20,
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
-  saveButton: {
-    backgroundColor: '#34C759',
-  },
-  editButtonText: {
+  buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    backgroundColor: '#FF3B30',
+    marginTop: 10,
+  },
+  logoutButtonText: {
+    color: '#fff',
   },
 }); 

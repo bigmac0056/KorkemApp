@@ -22,6 +22,7 @@ import { getPhrases, searchPhrases, initDatabase, Phrase } from '../../../databa
 import { kazakhAlphabet } from '../../../constants/alphabet';
 import { useRouter } from 'expo-router';
 import { translations } from '../../../translations';
+import phrasesData from '../../../data/phrases.json';
 
 export default function PhrasesScreen() {
   const { language } = useLanguageContext();
@@ -62,7 +63,12 @@ export default function PhrasesScreen() {
   }, [t.error]);
 
   useEffect(() => {
-    initializeDatabase();
+    if (Platform.OS === 'web') {
+      setPhrases(phrasesData as Phrase[]);
+      setIsLoading(false);
+    } else {
+      loadPhrases();
+    }
   }, []);
 
   useEffect(() => {

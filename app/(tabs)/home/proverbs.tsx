@@ -22,6 +22,7 @@ import { getAllProverbs, initDatabase, Proverb } from '../../../database/databas
 import { kazakhAlphabet } from '../../../constants/alphabet';
 import { useRouter } from 'expo-router';
 import { translations } from '../../../translations';
+import proverbsData from '../../../data/proverbs.json';
 
 export default function ProverbsScreen() {
   const { language } = useLanguageContext();
@@ -62,7 +63,12 @@ export default function ProverbsScreen() {
   }, []);
 
   useEffect(() => {
-    initializeDatabase();
+    if (Platform.OS === 'web') {
+      setProverbs(proverbsData as Proverb[]);
+      setIsLoading(false);
+    } else {
+      initializeDatabase();
+    }
   }, []);
 
   useEffect(() => {

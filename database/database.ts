@@ -45,54 +45,44 @@ export async function clearDatabase() {
 // Функция для инициализации базы данных
 export async function initDatabase() {
   try {
+    console.log('[DB] Initializing database...');
     // Инициализация базы данных (создание таблиц)
     await storage.initDatabase();
+    console.log('[DB] Database and tables initialized.');
 
     // --- Загрузка Фраз ---
     const phrases = await storage.getPhrases();
-    console.log(`Current phrases in database: ${phrases.length}`);
-    
-    // Принудительно перезагружаем фразы для обновления данных
-    console.log('Loading initial phrases data...');
-    if (Array.isArray(phrasesData)) {
-        console.log(`Found ${phrasesData.length} phrases in JSON file`);
-        // Очищаем существующие фразы
-        await storage.clearPhrases();
-        // Добавляем все фразы заново
+    if (!phrases || phrases.length === 0) {
+      console.log('[DB] Loading initial phrases data...');
+      if (Array.isArray(phrasesData)) {
         const transformedPhrases = phrasesData.map((item: any) => ({
-            id: item.id,
-            phrase: item.phrase,
-            translation: {
-                ru: item.translation.ru,
-                kk: item.translation.kk,
-                en: item.translation.en
-            }
+          id: item.id,
+          phrase: item.phrase,
+          translation: {
+            ru: item.translation.ru,
+            kk: item.translation.kk,
+            en: item.translation.en
+          }
         }));
         await storage.loadPhrases(transformedPhrases);
-        console.log('Initial phrases data loaded successfully');
-    } else {
-        console.log('No phrases data found in JSON file');
+        console.log(`[DB] ${transformedPhrases.length} phrases loaded successfully.`);
+      } else {
+        console.log('[DB] No phrases data found in JSON file');
+      }
     }
 
     // --- Загрузка Пословиц ---
     const proverbs = await storage.getAllProverbs();
-    console.log(`Current proverbs in database: ${proverbs.length}`);
-    
-    // Принудительно перезагружаем пословицы для обновления данных
-    console.log('Loading initial proverbs data...');
-    if (Array.isArray(proverbsData)) {
-        console.log(`Found ${proverbsData.length} proverbs in JSON file`);
-        // Очищаем существующие пословицы
-        await storage.clearProverbs();
-        // Добавляем все пословицы заново
-        for (const proverb of proverbsData) {
-            await storage.addProverb(proverb);
-        }
-        console.log('Initial proverbs data loaded successfully');
-    } else {
-        console.log('No proverbs data found in JSON file');
+    if (!proverbs || proverbs.length === 0) {
+      console.log('[DB] Loading initial proverbs data...');
+      if (Array.isArray(proverbsData)) {
+        await storage.loadProverbs(proverbsData as Proverb[]);
+        console.log(`[DB] ${proverbsData.length} proverbs loaded successfully.`);
+      } else {
+        console.log('[DB] No proverbs data found in JSON file');
+      }
     }
-
+    console.log('[DB] Database initialization complete.');
   } catch (error) {
     console.error('Error initializing database:', error);
     throw error;
