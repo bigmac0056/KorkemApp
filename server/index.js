@@ -29,7 +29,12 @@ app.use(limiter);
 // CORS configuration for Render.com
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:8081', 'http://localhost:8082', 'exp://localhost:8081'];
+  : [
+    'http://localhost:8081',
+    'http://localhost:8082',
+    'exp://localhost:8081',
+    'https://korkemapp--5xp8d9pzz8.expo.app' // Expo web deployment
+  ];
 
 // Add your Render.com domain to allowed origins
 if (process.env.RENDER_EXTERNAL_URL) {
