@@ -46,8 +46,12 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    // Allow Expo development server
-    if (origin.includes('localhost') || origin.includes('exp://')) {
+    // Allow Expo development server and all expo.app subdomains
+    if (
+      origin.includes('localhost') ||
+      origin.includes('exp://') ||
+      /\.expo\.app$/.test(origin) // allow all *.expo.app
+    ) {
       return callback(null, true);
     }
     
