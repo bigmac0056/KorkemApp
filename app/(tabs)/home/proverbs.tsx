@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -39,6 +39,7 @@ export default function ProverbsScreen() {
   const [notificationMessage, setNotificationMessage] = useState('');
   const router = useRouter();
   const t = useTranslation();
+  const allProverbsRef = useRef<Proverb[]>([]); // for web: store all proverbs
 
   const initializeDatabase = async () => {
     try {
@@ -64,7 +65,8 @@ export default function ProverbsScreen() {
 
   useEffect(() => {
     if (Platform.OS === 'web') {
-      setProverbs(proverbsData as Proverb[]);
+      allProverbsRef.current = proverbsData as Proverb[];
+      setProverbs(allProverbsRef.current);
       setIsLoading(false);
     } else {
       initializeDatabase();
@@ -73,15 +75,29 @@ export default function ProverbsScreen() {
 
   useEffect(() => {
     if (searchQuery) {
-      const filteredProverbs = proverbs.filter(proverb => 
-        proverb.proverb.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        proverb.translation.ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        proverb.translation.kk.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        proverb.translation.en.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setProverbs(filteredProverbs);
+      if (Platform.OS === 'web') {
+        const filtered = allProverbsRef.current.filter(proverb =>
+          proverb.proverb.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          proverb.translation.ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          proverb.translation.kk.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          proverb.translation.en.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setProverbs(filtered);
+      } else {
+        const filteredProverbs = proverbs.filter(proverb => 
+          proverb.proverb.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          proverb.translation.ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          proverb.translation.kk.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          proverb.translation.en.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setProverbs(filteredProverbs);
+      }
     } else {
-      loadProverbs();
+      if (Platform.OS === 'web') {
+        setProverbs(allProverbsRef.current);
+      } else {
+        loadProverbs();
+      }
     }
   }, [searchQuery, loadProverbs]);
 
